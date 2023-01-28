@@ -326,16 +326,16 @@
                 // Our root node will "fail" requirements check, because it has none. So accept idx==0
                 if (metReq || idx == 0) {
                     Toggles[idx] = ++CurSel;
+
+                    // Special handling for Potions
+                    if (idx >= PotionIndexStart && idx <= PotionIndexEnd) {
+                        CurPotion++;
+                    }
                 }
 
                 // Special handling for full completion
                 if (CurSel == 29) {
                     Toggles[CurSel++] = 30;
-                }
-
-                // Special handling for Potions
-                if (idx >= PotionIndexStart && idx <= PotionIndexEnd) {
-                    CurPotion++;
                 }
             }
             else {
