@@ -1,0 +1,526 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <style>
+        body {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #myImg {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            z-index: 1;
+        }
+
+        #myCanvas {
+            pointer-events: none;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            z-index: 2;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Container overlapping Canvas and Image -->
+    <div width=100% height=100% position="relative">
+        <!-- "https://bnetcmsus-a.akamaihd.net/cms/page_media/RUQJUGNI5EWW1674699910911.jpg" -->
+        <img id="myImg" src="images/altar_base.jpg" usemap="#image-map" />
+        <canvas id="myCanvas" width="1920px" height="1080px"></canvas>
+    </div>
+
+    <!-- Image Map for clickable Image regions to call ToggleNode -->
+    <map name="image-map">
+        <area onclick="ToggleNode(0)" href="#" coords="1043,335,34" shape="circle"
+            title="Your Kill Streak timer duration and reward bonus are doubled.">
+
+        <area onclick="ToggleNode(1)" href="#" coords="926,451,34" shape="circle"
+            title="Pools of Reflection last for the entire Season and are not removed by death.">
+        <area onclick="ToggleNode(2)" href="#" coords="1159,451,34" shape="circle"
+            title=" 	Items have no level requirement.">
+
+        <area onclick="ToggleNode(3)" href="#" coords="868,510,34" shape="circle" title="+200 Damage">
+        <area onclick="ToggleNode(4)" href="#" coords="984,510,34" shape="circle" title="+25% Missile Damage Reduction">
+        <area onclick="ToggleNode(5)" href="#" coords="1101,510,34" shape="circle"
+            title="+25% Movement Speed (Uncapped)">
+        <area onclick="ToggleNode(6)" href="#" coords="1217,510,34" shape="circle"
+            title="Increase damage against elites by 15%.">
+
+        <area onclick="ToggleNode(7)" href="#" coords="1044,568,34" shape="circle"
+            title="Picking up Health Globes grants a shield for 5% of your maximum health for 7 seconds. Max stacks 5.">
+
+        <area onclick="ToggleNode(8)" href="#" coords="868,625,34" shape="circle" title="+25% Melee Damage Reduction.">
+        <area onclick="ToggleNode(9)" href="#" coords="1044,625,34" shape="circle"
+            title="Increases your highest elemental skill damage bonus by 10%.">
+        <area onclick="ToggleNode(10)" href="#" coords="1217,625,34" shape="circle"
+            title="Increase damage against elites by 20%.">
+
+        <area onclick="ToggleNode(11)" href="#" coords="810,684,34" shape="circle" title="+10% Damage">
+        <area onclick="ToggleNode(12)" href="#" coords="926,684,34" shape="circle"
+            title="Double the amount of Death's Breaths that drop.">
+        <area onclick="ToggleNode(13)" href="#" coords="984,684,34" shape="circle"
+            title="Critical hits grant resource: Mana: 15, Hatred: 5, Wrath: 5, Arcane Power: 3, Fury: 3, Spirit: 5, Essence: 5.">
+        <area onclick="ToggleNode(14)" href="#" coords="1100,684,34" shape="circle"
+            title="Double the amount of Bounty Caches that drop from completing bounties.">
+        <area onclick="ToggleNode(15)" href="#" coords="1159,684,34" shape="circle"
+            title="Progress orbs from Nephalem and Greater Rifts are picked up automatically.">
+        <area onclick="ToggleNode(16)" href="#" coords="1275,684,34" shape="circle"
+            title="Reduces the damage taken from elites by 25%.">
+
+        <area onclick="ToggleNode(17)" href="#" coords="868,743,34" shape="circle" title="+15% Damage">
+        <area onclick="ToggleNode(18)" href="#" coords="1044,743,34" shape="circle"
+            title="Gain immunity to crowd-controlling effects.">
+        <area onclick="ToggleNode(19)" href="#" coords="1217,743,34" shape="circle" title="Gain passability.">
+
+        <area onclick="ToggleNode(20)" href="#" coords="810,800,34" shape="circle" title="Pets pick up Death's Breath.">
+        <area onclick="ToggleNode(21)" href="#" coords="926,800,34" shape="circle"
+            title="Elite packs drop one additional progress orb.">
+        <area onclick="ToggleNode(22)" href="#" coords="984,800,34" shape="circle"
+            title="Increase damage done to Bosses by 25%.">
+        <area onclick="ToggleNode(23)" href="#" coords="1100,800,34" shape="circle"
+            title="Pets pick up and salvage common, magic, and rare items.">
+        <area onclick="ToggleNode(24)" href="#" coords="1159,800,34" shape="circle"
+            title="Increase your chance to Dodge by 15%.">
+        <area onclick="ToggleNode(25)" href="#" coords="1275,800,34" shape="circle"
+            title="Double the chance to find a legendary item purchased from Kadala.">
+
+        <area onclick="ToggleNode(26)" href="#" coords="868,860,34" shape="circle"
+            title="When you drink your health potion, you manifest one of three runic circles on the ground that grant increased damage, increased cooldown reduction, or increased resource cost reduction.">
+        <area onclick="ToggleNode(27)" href="#" coords="1044,860,34" shape="circle"
+            title="When you drink your health potion, all enemies within 25 yards deal 25% less damage.">
+        <area onclick="ToggleNode(28)" href="#" coords="1222,860,34" shape="circle"
+            title="When you drink your health potion, gain a random shrine or pylon effect.">
+
+        <area onclick="ToggleDescriptions()" href="#" coords="634,588,781,631" shape="rect" title="Toggle Descriptions">
+    </map>
+
+
+    <script type="application/javascript">
+        let ShowDescriptions = true;
+        function ToggleDescriptions() { ShowDescriptions = !ShowDescriptions; drawMap(); }
+
+        const Toggles = Array(30).fill(0);
+        const LineMap = [
+             /*A   0 */[[1, 1026, 351, 944, 432], [2, 1061, 351, 1143, 431]],
+             /*B   1 */[[3, 908, 469, 885, 492], [4, 942, 468, 968, 492]],
+             /*C   2 */[[5, 1144, 471, 1119, 496], [6, 1179, 466, 1203, 490]],
+             /*D   3 */[[7, 890, 517, 1021, 560]],
+             /*E   4 */[[7, 1001, 526, 1025, 552]],
+             /*F   5 */[[7, 1085, 528, 1062, 553]],
+             /*G   6 */[[7, 1194, 518, 1067, 560]],
+             /*H   7 */[[8, 1022, 574, 891, 618], [9, 1043, 589, 1043, 603], [10, 1065, 575, 1194, 617]],
+             /*I   8 */[[11, 852, 644, 827, 668], [12, 884, 642, 911, 667]],
+             /*J   9 */[[13, 1027, 643, 1002, 667], [14, 1060, 642, 1085, 665]],
+             /*K  10 */[[15, 1202, 643, 1177, 668], [16, 1235, 639, 1259, 665]],
+             /*L  11 */[[17, 826, 701, 851, 727]],
+             /*M  12 */[[17, 911, 702, 887, 726]],
+             /*N  13 */[[18, 1000, 699, 1024, 724]],
+             /*O  14 */[[18, 1086, 702, 1062, 726]],
+             /*P  15 */[[19, 1176, 699, 1201, 724]],
+             /*Q  16 */[[19, 1260, 702, 1236, 726]],
+             /*R  17 */[[20, 853, 760, 829, 785], [21, 884, 759, 908, 784], [18, 892, 743, 1017, 743]],
+             /*S  18 */[[22, 1028, 760, 1004, 786], [23, 1060, 759, 1083, 783], [17, 892, 743, 1017, 743], [19, 1067, 743, 1192, 743]],
+             /*T  19 */[[24, 1202, 760, 1177, 785], [25, 1233, 758, 1259, 782], [18, 1067, 743, 1192, 743]],
+             /*U  20 */[[26, 824, 818, 854, 846]],
+             /*V  21 */[[26, 913, 819, 884, 846]],
+             /*W  22 */[[27, 1000, 817, 1028, 846]],
+             /*X  23 */[[27, 1087, 820, 1058, 846]],
+             /*Y  24 */[[28, 1175, 816, 1207, 846]],
+             /*Z  25 */[[28, 1264, 820, 1238, 846]],
+             /*AA  26*/[],
+             /*AB  27*/[],
+             /*AC  28*/[],
+             /*AD  29*/[],
+        ];
+        const NodeRequirements = [
+            /*A   0 */[],
+            /*B   1 */[0],
+            /*C   2 */[0],
+            /*D   3 */[1],
+            /*E   4 */[1],
+            /*F   5 */[2],
+            /*G   6 */[2],
+            /*H   7 */[3, 4, 5, 6],
+            /*I   8 */[7],
+            /*J   9 */[7],
+            /*K  10 */[7],
+            /*L  11 */[8],
+            /*M  12 */[8],
+            /*N  13 */[9],
+            /*O  14 */[9],
+            /*P  15 */[10],
+            /*Q  16 */[10],
+            /*R  17 */[11, 12, 18],
+            /*S  18 */[13, 14, 17, 19],
+            /*T  19 */[15, 16, 18],
+            /*U  20 */[17],
+            /*V  21 */[17],
+            /*W  22 */[18],
+            /*X  23 */[18],
+            /*Y  24 */[19],
+            /*Z  25 */[19],
+            /*AA  26*/[20, 21],
+            /*AB  27*/[22, 23],
+            /*AC  28*/[24, 25],
+            /*AD  29*/[],
+        ];
+
+        const NodeCenters = [
+             /*A   0 */[1043, 335],
+             /*B   1 */[926, 451],
+             /*C   2 */[1159, 451],
+             /*D   3 */[868, 510],
+             /*E   4 */[984, 510],
+             /*F   5 */[1101, 510],
+             /*G   6 */[1217, 510],
+             /*H   7 */[1044, 566],
+             /*I   8 */[868, 625],
+             /*J   9 */[1044, 625],
+             /*K  10 */[1217, 625],
+             /*L  11 */[810, 684],
+             /*M  12 */[926, 684],
+             /*N  13 */[984, 684],
+             /*O  14 */[1100, 684],
+             /*P  15 */[1159, 684],
+             /*Q  16 */[1275, 684],
+             /*R  17 */[868, 743],
+             /*S  18 */[1044, 743],
+             /*T  19 */[1217, 743],
+             /*U  20 */[810, 800],
+             /*V  21 */[926, 800],
+             /*W  22 */[984, 800],
+             /*X  23 */[1100, 800],
+             /*Y  24 */[1159, 800],
+             /*Z  25 */[1275, 800],
+             /*AA  26*/[868, 860],
+             /*AB  27*/[1044, 860],
+             /*AC  28*/[1222, 860],
+             /*AD  29*/[1045, 938],
+        ];
+        const NodeDescriptions = [
+             /*A   0 */["Double Kill Streak", -14],
+             /*B   1 */["Perm XP Pools", -14],
+             /*C   2 */["No Item Lvl Req", -14],
+             /*D   3 */["+200 Dmg", -14],
+             /*E   4 */["-25% Missile Dmg", -14],
+             /*F   5 */["+25% Movespeed", -14],
+             /*G   6 */["+15% Elite Dmg", -14],
+             /*H   7 */["5% Shield from HP Globe", -14],
+             /*I   8 */["-25% Melee Dmg", -14],
+             /*J   9 */["+10% Ele Dmg", -14],
+             /*K  10 */["+20% Elite Dmg", -14],
+             /*L  11 */["+10% Dmg", -14],
+             /*M  12 */["DBs x2", -14],
+             /*N  13 */["Resource on Crit", +25],
+             /*O  14 */["Bounties x2", +25],
+             /*P  15 */["Auto Orbs", -14],
+             /*Q  16 */["-25% Elite Dmg", -14],
+             /*R  17 */["+15% Dmg", -14],
+             /*S  18 */["CC Immunity", -14],
+             /*T  19 */["Passability", -14],
+             /*U  20 */["Auto-DBs", -14],
+             /*V  21 */["+1 Progress Orb", -14],
+             /*W  22 */["+25% Boss Dmg", +25],
+             /*X  23 */["Auto-Pick/Salvage", +25],
+             /*Y  24 */["+15% Dodge", -14],
+             /*Z  25 */["Kadala Leggies x2", -14],
+             /*AA  26*/["Triune Circles", -14],
+             /*AB  27*/["-25% Dmg within 25yds", +25],
+             /*AC  28*/["Random Shrine/Pylon Power", -14],
+             /*AD  29*/["Double Primals && Diablo Wings!", -14],
+        ];
+        const Offerings = [
+             /*A   0 */["10 Reusable Parts"],
+             /*B   1 */["1 Flawless Diamond (or greater)", "15 Arcane Dust", "20 Reusable Parts"],
+             /*C   2 */["1 Greater Rift Key", "10 Death's Breaths"],
+             /*D   3 */["Any Class-Specific Set Helm"],
+             /*E   4 */["20 Forgotten Souls", "10 Khanduran Runes", "10 Caldeum Nightshade", "10 Arreat War Tapestry", "10 Corrupted Angel Flesh", "10 Westmarch Holy Water"],
+             /*F   5 */["1 Leoric's Regret", "1 Vial of Putridness", "1 Idol of Terror", "1 Heart of Fright"],
+             /*G   6 */["Reaper's Wraps"],
+             /*H   7 */["30 Forgotten Souls"],
+             /*I   8 */["1100 Blood Shards"],
+             /*J   9 */["1 Flawless Royal Ruby", "20 Death's Breaths", "Ring of Royal Grandeur"],
+             /*K  10 */["1 Flawless Royal Emerald", "30 Khanduran Runes", "30 Caldeum Nightshade", "30 Arreat War Tapestry", "30 Corrupted Angel Flesh", "30 Westmarch Holy Water"],
+             /*L  11 */["20 Greater Rift Keys", "1 Ramaladni's Gift"],
+             /*M  12 */["1300 Blood Shards"],
+             /*N  13 */["1 Petrified Scream"],
+             /*O  14 */["1 Challenge Rift Cache"],
+             /*P  15 */["250 Forgotten Souls"],
+             /*Q  16 */["1400 Blood Shards"],
+             /*R  17 */["Ancient Hellfire Amulet"],
+             /*S  18 */["Never Ending Questions"],
+             /*T  19 */["Ancient Puzzle Ring", "50 Khanduran Runes", "50 Caldeum Nightshade", "50 Arreat War Tapestry", "50 Corrupted Angel Flesh", "50 Westmarch Holy Water"],
+             /*U  20 */["500 Death's Breaths", "300 Forgotten Souls"],
+             /*V  21 */["1500 Blood Shards"],
+             /*W  22 */["Whisper of Atonement (Rank 125)"],
+             /*X  23 */["Any Augmented Weapon"],
+             /*Y  24 */["Staff of Herding"],
+             /*Z  25 */["1600 Blood Shards"],
+            ["UNLOCK COMPLETE"],
+            ["UNLOCK COMPLETE"] // Extra node because we have a "fake" node representing full completion
+        ];
+
+        // Potions are nodes 26 27 28
+        const PotionIndexStart = 26;
+        const PotionIndexEnd = 28;
+        const OfferingsPotions = [
+             /*AA  26*/["55 Primordial Ashes"],
+             /*AB  27*/["110 Primordial Ashes"],
+             /*AC  28*/["165 Primordial Ashes"],
+             /*AD  29*/["COMPLETE"],
+        ];
+
+        const TEMPLATE = [
+             /*A   0 */[],
+             /*B   1 */[],
+             /*C   2 */[],
+             /*D   3 */[],
+             /*E   4 */[],
+             /*F   5 */[],
+             /*G   6 */[],
+             /*H   7 */[],
+             /*I   8 */[],
+             /*J   9 */[],
+             /*K  10 */[],
+             /*L  11 */[],
+             /*M  12 */[],
+             /*N  13 */[],
+             /*O  14 */[],
+             /*P  15 */[],
+             /*Q  16 */[],
+             /*R  17 */[],
+             /*S  18 */[],
+             /*T  19 */[],
+             /*U  20 */[],
+             /*V  21 */[],
+             /*W  22 */[],
+             /*X  23 */[],
+             /*Y  24 */[],
+             /*Z  25 */[],
+             /*AA  26*/[],
+             /*AB  27*/[],
+             /*AC  28*/[],
+             /*AD  29*/[],
+        ];
+
+
+        let canvas = document.getElementById('myCanvas');
+        let context = canvas.getContext('2d');
+
+        let CurSel = 0;
+        let CurPotion = 0;
+        function ToggleNode(idx) {
+            // Set it if not selected
+            if (Toggles[idx] == 0) {
+                var metReq = false;
+                NodeRequirements[idx].forEach(element => {
+                    if (Toggles[element] != 0) {
+                        metReq = true;
+                    }
+                });
+
+                // Our root node will "fail" requirements check, because it has none. So accept idx==0
+                if (metReq || idx == 0) {
+                    Toggles[idx] = ++CurSel;
+                }
+
+                // Special handling for full completion
+                if (CurSel == 29) {
+                    Toggles[CurSel++] = 30;
+                }
+
+                // Special handling for Potions
+                if (idx >= PotionIndexStart && idx <= PotionIndexEnd) {
+                    CurPotion++;
+                }
+            }
+            else {
+                // Clear it, and all subsequent nodes
+                var prevNum = Toggles[idx];
+                Toggles.forEach((element, index) => {
+                    if (element >= prevNum) {
+                        Toggles[index] = 0;
+
+                        // Special handling for Potions
+                        if (index >= PotionIndexStart && index <= PotionIndexEnd) {
+                            CurPotion--;
+                        }
+                    }
+                });
+                CurSel = prevNum - 1;
+            }
+            drawMap();
+        }
+
+        function printDescription(nodeIdx) {
+            context.font = "12px Arial";
+            context.textAlign = "center";
+            context.strokeStyle = 'black';
+            context.lineWidth = 3;
+            context.fillStyle = '#00ffff';
+            var desc = NodeDescriptions[nodeIdx];
+            var txt = desc[0];
+            context.miterLimit = 1;
+            context.strokeText(txt, NodeCenters[nodeIdx][0], NodeCenters[nodeIdx][1] + desc[1]);
+            context.fillText(txt, NodeCenters[nodeIdx][0], NodeCenters[nodeIdx][1] + desc[1]);
+        }
+
+        function printOfferings() {
+            // Draw our box
+            context.beginPath();
+            context.lineWidth = 5;
+            context.strokeStyle = 'black';
+            context.strokeRect(620, 350, 180, 230);
+            context.lineWidth = 3;
+            context.strokeStyle = '#ffbf00'; // Gold color
+            context.strokeRect(620, 350, 180, 230);
+
+            // Write our current Offer Number
+            var offerNum = (CurSel - CurPotion + 1).toString();
+            context.font = "28px Arial";
+            context.textAlign = "center";
+            context.strokeStyle = 'black';
+            context.fillStyle = 'white';
+            context.lineWidth = 6;
+            context.miterLimit = 1;
+            context.strokeText(offerNum, 707, 380);
+            context.fillText(offerNum, 707, 380);
+
+
+            // Write the current offer
+            var offer = Offerings[CurSel - CurPotion];
+            var curOffset = 0;
+            offer.forEach(item => {
+                // Display the words for Description box
+                context.font = "14px Arial";
+                context.textAlign = "left";
+                context.strokeStyle = 'black';
+                context.fillStyle = 'white';
+                context.lineWidth = 4;
+                context.miterLimit = 1;
+                context.strokeText(item, 630, 405 + curOffset);
+                context.fillText(item, 630, 405 + curOffset);
+                curOffset += 25;
+            });
+
+            // Repeat for Potion Offerings
+            offer = OfferingsPotions[CurPotion];
+            curOffset = 0;
+            // Write the current offer
+            offer.forEach(item => {
+                // Display the words for Description box
+                context.font = "14px Arial";
+                context.textAlign = "left";
+                context.strokeStyle = 'black';
+                context.lineWidth = 4;
+                context.fillStyle = 'cyan';
+                context.miterLimit = 1;
+                context.strokeText(item, 630, 565 + curOffset);
+                context.fillText(item, 630, 565 + curOffset);
+                curOffset += 25;
+            });
+        }
+
+        function drawMap() {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            // Draw the Descriptions Box
+            context.beginPath();
+            context.lineWidth = 5;
+            context.strokeStyle = 'black';
+            context.strokeRect(630, 585, 150, 50);
+            context.lineWidth = 3;
+            context.strokeStyle = '#ffbf00'; // Gold color
+            context.strokeRect(630, 585, 150, 50);
+
+            // Display the words for Description box
+            context.font = "16px Arial";
+            context.textAlign = "center";
+            context.strokeStyle = 'black';
+            context.lineWidth = 4;
+            if (ShowDescriptions) {
+                context.fillStyle = 'red';
+                txt = "Hide Descriptions";
+            }
+            else {
+                context.fillStyle = 'green';
+                txt = "Show Descriptions";
+            }
+            context.miterLimit = 1;
+            context.strokeText(txt, 705, 616);
+            context.fillText(txt, 705, 616);
+
+            // Due to layering, draw info in the following order. Even if it's inefficient to re-loop so much
+            // Print Lines
+            // Print Circles
+            // Print Descriptions
+            // Print Selection Numbers
+
+            // Print Lines
+            Toggles.forEach((toggle, index) => {
+                NodeRequirements[index].forEach(element => {
+                    if (Toggles[element] != 0) {
+                        LineMap[element].forEach(line => {
+                            if (line[0] == index) {
+                                context.beginPath();
+                                context.moveTo(line[1], line[2]);
+                                context.lineTo(line[3], line[4]);
+                                context.lineWidth = 10;
+
+                                // set line color
+                                if (toggle != 0 && Toggles[element] != 0) {
+                                    context.strokeStyle = 'green';
+                                }
+                                else {
+                                    context.strokeStyle = 'gray';
+
+                                }
+                                context.stroke();
+                            }
+                        });
+                    }
+                });
+            });
+            // Print Circles
+            Toggles.forEach((toggle, nodeIdx) => {
+                if (toggle != 0) {
+                    context.beginPath();
+                    context.arc(NodeCenters[nodeIdx][0], NodeCenters[nodeIdx][1], 23, 0, 2 * Math.PI)
+                    context.lineWidth = 3;
+                    context.strokeStyle = 'green';
+                    context.stroke();
+                }
+            });
+            // Print Descriptions
+            if (ShowDescriptions) {
+                NodeDescriptions.forEach((desc, idx) => {
+                    printDescription(idx);
+                });
+            }
+            // Print Numbers
+            Toggles.forEach((toggle, nodeIdx) => {
+                if (toggle != 0) {
+                    // Print number
+                    context.font = "30px Arial";
+                    context.textAlign = "center";
+                    context.strokeStyle = 'black';
+                    context.lineWidth = 4;
+                    context.fillStyle = '#ffbf00'; // Gold Color
+                    var txt = toggle.toString();
+                    context.miterLimit = 1;
+                    context.strokeText(txt, NodeCenters[nodeIdx][0], NodeCenters[nodeIdx][1] + 11);
+                    context.fillText(txt, NodeCenters[nodeIdx][0], NodeCenters[nodeIdx][1] + 11);
+                }
+            });
+
+            printOfferings();
+        }
+
+        drawMap();
+    </script>
+</body>
+
+</html>
