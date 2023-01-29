@@ -100,12 +100,14 @@
 
         <area onclick="ToggleDescriptions()" href="#dne" coords="634,588,781,631" shape="rect"
             title="Toggle Descriptions">
+
+        <area onclick="SaveState()" href="#dne" coords="620,135,800,175" shape="rect" title="Save">
     </map>
 
 
     <script type="application/javascript">
         let ShowDescriptions = true;
-        function ToggleDescriptions() { ShowDescriptions = !ShowDescriptions; drawMap(); }
+        function ToggleDescriptions() { ShowDescriptions = !ShowDescriptions; RenderPlanner(); }
 
         const Toggles = Array(30).fill(0);
         const LineMap = [
@@ -278,7 +280,7 @@
         // Potions are nodes 26 27 28
         const PotionIndexStart = 26;
         const PotionIndexEnd = 28;
-        function isNodePotion(index) {return index >= PotionIndexStart && index <= PotionIndexEnd;}
+        function isNodePotion(index) { return index >= PotionIndexStart && index <= PotionIndexEnd; }
         const OfferingsPotions = [
              /*AA  26*/["55 Primordial Ashes"],
              /*AB  27*/["110 Primordial Ashes"],
@@ -323,6 +325,8 @@
         let canvas = document.getElementById('myCanvas');
         let context = canvas.getContext('2d');
 
+        const SearchParamState = 's';
+
         const ColorLineActive = "green";// "#ffc61a";//"green";
         const ColorLineAvailable = "gray";
         const ColorPrimordial = "#ff4000";//"#ff00ff";
@@ -336,6 +340,42 @@
         const ColorNumbers = "#ffbf00";
         let CurSel = 0;
         let CurPotion = 0;
+
+        function StateSave() {
+            var nodeStr = "";
+            Toggles.forEach(val => {
+                nodeStr += val.toString(16).padStart(2, '0');
+            });
+            return nodeStr;
+        }
+        function StateLoad(stateStr) {
+            if (stateStr.length != Toggles.length * 2) {
+                return;
+            }
+            CurSel = 0;
+            CurPotion = 0;
+            var curInd = 0;
+            while (stateStr.length >= 2) {
+                var curVal = parseInt(stateStr.substring(0, 2), 16);
+                Toggles[curInd++] = curVal;
+                stateStr = stateStr.substring(2);
+                if (curVal > 0) {
+                    CurSel++;
+                    if (isNodePotion(curInd)) {
+                        CurPotion++;
+                    }
+                }
+            }
+        }
+
+        function SaveState() {
+            // Set the node parameter and reload the page
+            var params = new URLSearchParams(window.location.search);
+            var nodeStr = StateSave();
+            params.set(SearchParamState, nodeStr);
+            window.location.search = params.toString();
+        }
+
         function ToggleNode(idx) {
             // Set it if not selected
             if (Toggles[idx] == 0) {
@@ -369,17 +409,18 @@
                         Toggles[index] = 0;
 
                         // Special handling for Potions
-                        if(isNodePotion(index)){
+                        if (isNodePotion(index)) {
                             CurPotion--;
                         }
                     }
                 });
                 CurSel = prevNum - 1;
             }
-            drawMap();
+
+            RenderPlanner();
         }
 
-        function printDescription(nodeIdx) {
+        function PrintDescription(nodeIdx) {
             context.font = "12px Arial";
             context.textAlign = "center";
             context.strokeStyle = 'black';
@@ -388,15 +429,14 @@
             var txt = desc[0];
             context.miterLimit = 1;
             context.fillStyle = ColorDescription;
-            if(isNodePotion(nodeIdx))
-            {
+            if (isNodePotion(nodeIdx)) {
                 context.fillStyle = ColorPotion;
             }
             context.strokeText(txt, NodeCenters[nodeIdx][0], NodeCenters[nodeIdx][1] + desc[1]);
             context.fillText(txt, NodeCenters[nodeIdx][0], NodeCenters[nodeIdx][1] + desc[1]);
         }
 
-        function printListCell(x, y, width, height, colorBg, numStr, text) {
+        function PrintListCell(x, y, width, height, colorBg, numStr, text) {
             // Draw our box
             var numx = Math.min(40, width / 10);
             context.beginPath();
@@ -415,12 +455,12 @@
             context.fillText(text, x + numx + 5, y + (height / 2) + 3);
         }
 
-        function printOfferTable() {
+        function PrintOfferTable() {
             var startX = 40;
             var startY = 130;
             var height = 30;
             var width = 480;
-            printListCell(startX, startY, width, height, ColorTableHeader, '#', "Offer Materials");
+            PrintListCell(startX, startY, width, height, ColorTableHeader, '#', "Offer Materials");
             var curOffset = height;
             Offerings.forEach((offer, index) => {
                 offer = offer.join(", ");
@@ -433,21 +473,21 @@
                 var color = ColorTableInactive;
                 if (index < CurSel - CurPotion) {
                     color = ColorTableActive1;
-                    if ((index+1) % 2) {
+                    if ((index + 1) % 2) {
                         color = ColorTableActive2;
                     }
                 }
-                printListCell(startX, startY + curOffset, width, height, color, (index + 1).toString(), offer);
+                PrintListCell(startX, startY + curOffset, width, height, color, (index + 1).toString(), offer);
                 curOffset += height;
             });
         }
 
-        function printActivePowers() {
+        function PrintActivePowers() {
             var startX = 1400;
             var startY = 130;
             var height = 30;
             var width = 320;
-            printListCell(startX, startY, width, height, ColorTableHeader, '#', "Active Rites");
+            PrintListCell(startX, startY, width, height, ColorTableHeader, '#', "Active Rites");
             var curOffset = height;
             var numActive = CurSel;
             for (i = 1; i <= numActive; i++) {
@@ -459,18 +499,17 @@
                             color = ColorTableActive2;
                         }
                         // Check if it's a potion power, for pretty colors
-                        if(isNodePotion(index))
-                        {
+                        if (isNodePotion(index)) {
                             color = ColorPotion;
                         }
-                        printListCell(startX, startY + curOffset, width, height, color, i.toString(), NodeDescriptions[index][0]);
+                        PrintListCell(startX, startY + curOffset, width, height, color, i.toString(), NodeDescriptions[index][0]);
                         curOffset += height;
                     }
                 });
             }
         }
 
-        function printOfferings() {
+        function PrintOfferings() {
             // Draw our box
             // context.beginPath();
             // context.lineWidth = 5;
@@ -538,12 +577,9 @@
                 context.fillText(item, 625, 715 + curOffset);
                 curOffset += 25;
             });
-
-            printOfferTable();
-            printActivePowers();
         }
 
-        function drawMap() {
+        function RenderPlanner() {
             context.clearRect(0, 0, canvas.width, canvas.height);
             // Draw the Descriptions Box
             context.beginPath();
@@ -570,6 +606,26 @@
             context.miterLimit = 1;
             context.strokeText(txt, 705, 616);
             context.fillText(txt, 705, 616);
+
+            // Draw the Save Box 620,120,800,160
+            context.beginPath();
+            context.lineWidth = 5;
+            context.strokeStyle = 'black';
+            context.strokeRect(620, 135, 180, 40);
+            context.lineWidth = 3;
+            context.strokeStyle = '#ffbf00'; // Gold color
+            context.strokeRect(620, 135, 180, 40);
+
+            // Display the words for Description box
+            context.font = "bold 20px Arial";
+            context.textAlign = "center";
+            context.strokeStyle = 'black';
+            context.lineWidth = 4;
+            context.fillStyle = 'white';
+            txt = "Save/Export";
+            context.miterLimit = 1;
+            context.strokeText(txt, 710, 163);
+            context.fillText(txt, 710, 163);
 
             // Due to layering, draw info in the following order. Even if it's inefficient to re-loop so much
             // Print Lines
@@ -609,8 +665,7 @@
                     context.arc(NodeCenters[nodeIdx][0], NodeCenters[nodeIdx][1], 23, 0, 2 * Math.PI)
                     context.lineWidth = 3;
                     context.strokeStyle = ColorLineActive;
-                    if(isNodePotion(nodeIdx))
-                    {
+                    if (isNodePotion(nodeIdx)) {
                         context.strokeStyle = ColorPotion;
                     }
                     context.stroke();
@@ -619,7 +674,7 @@
             // Print Descriptions
             if (ShowDescriptions) {
                 NodeDescriptions.forEach((desc, idx) => {
-                    printDescription(idx);
+                    PrintDescription(idx);
                 });
             }
             // Print Numbers
@@ -638,10 +693,23 @@
                 }
             });
 
-            printOfferings();
+            PrintOfferings();
+            PrintOfferTable();
+            PrintActivePowers();
         }
 
-        drawMap();
+        function ParseState() {
+            var search = window.location.search;
+            if (search) {
+                var params = new URLSearchParams(search);
+                var nodes = params.get(SearchParamState);
+                StateLoad(nodes);
+            }
+        }
+
+
+        ParseState();
+        RenderPlanner();
     </script>
 </body>
 
