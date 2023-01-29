@@ -29,7 +29,7 @@
     <!-- Container overlapping Canvas and Image -->
     <div width=100% height=100% position="relative">
         <!-- "https://bnetcmsus-a.akamaihd.net/cms/page_media/RUQJUGNI5EWW1674699910911.jpg" -->
-        <img id="myImg" src="images/altar_base3.jpg" usemap="#image-map" />
+        <img id="myImg" src="images/altar_base4.jpg" usemap="#image-map" />
         <canvas id="myCanvas" width="1920px" height="1080px"></canvas>
     </div>
 
@@ -101,7 +101,7 @@
         <area onclick="ToggleDescriptions()" href="#dne" coords="634,588,781,631" shape="rect"
             title="Toggle Descriptions">
 
-        <area onclick="SaveState()" href="#dne" coords="620,135,800,175" shape="rect" title="Save">
+        <area onclick="SaveState()" href="#dne" coords="1105,133,1250,175" shape="rect" title="Save">
     </map>
 
 
@@ -134,7 +134,7 @@
              /*U  20 */[[26, 824, 818, 854, 846]],
              /*V  21 */[[26, 913, 819, 884, 846]],
              /*W  22 */[[27, 1000, 817, 1028, 846]],
-             /*X  23 */[[27, 1087, 820, 1058, 846]],
+             /*X  23 */[[27, 1087, 820, 1061, 847]],
              /*Y  24 */[[28, 1175, 816, 1207, 846]],
              /*Z  25 */[[28, 1264, 820, 1238, 846]],
              /*AA  26*/[],
@@ -581,17 +581,8 @@
 
         function RenderPlanner() {
             context.clearRect(0, 0, canvas.width, canvas.height);
-            // Draw the Descriptions Box
-            context.beginPath();
-            context.lineWidth = 5;
-            context.strokeStyle = 'black';
-            context.strokeRect(630, 585, 150, 50);
-            context.lineWidth = 3;
-            context.strokeStyle = '#ffbf00'; // Gold color
-            context.strokeRect(630, 585, 150, 50);
-
             // Display the words for Description box
-            context.font = "bold 16px Arial";
+            context.font = "bold 14px Arial";
             context.textAlign = "center";
             context.strokeStyle = 'black';
             context.lineWidth = 4;
@@ -604,28 +595,19 @@
                 txt = "Show Descriptions";
             }
             context.miterLimit = 1;
-            context.strokeText(txt, 705, 616);
-            context.fillText(txt, 705, 616);
+            context.strokeText(txt, 705, 615);
+            context.fillText(txt, 705, 615);
 
-            // Draw the Save Box 620,120,800,160
-            context.beginPath();
-            context.lineWidth = 5;
-            context.strokeStyle = 'black';
-            context.strokeRect(620, 135, 180, 40);
-            context.lineWidth = 3;
-            context.strokeStyle = '#ffbf00'; // Gold color
-            context.strokeRect(620, 135, 180, 40);
-
-            // Display the words for Description box
-            context.font = "bold 20px Arial";
+            // Display the words for Save/Export box
+            context.font = "bold 16px Arial";
             context.textAlign = "center";
             context.strokeStyle = 'black';
             context.lineWidth = 4;
-            context.fillStyle = 'white';
+            context.fillStyle = '#e6e6e6'; // Light gray
             txt = "Save/Export";
             context.miterLimit = 1;
-            context.strokeText(txt, 710, 163);
-            context.fillText(txt, 710, 163);
+            context.strokeText(txt, 1180, 160);
+            context.fillText(txt, 1180, 160);
 
             // Due to layering, draw info in the following order. Even if it's inefficient to re-loop so much
             // Print Lines
