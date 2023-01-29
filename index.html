@@ -29,7 +29,7 @@
     <!-- Container overlapping Canvas and Image -->
     <div width=100% height=100% position="relative">
         <!-- "https://bnetcmsus-a.akamaihd.net/cms/page_media/RUQJUGNI5EWW1674699910911.jpg" -->
-        <img id="myImg" src="images/altar_base.jpg" usemap="#image-map" />
+        <img id="myImg" src="images/altar_base2.jpg" usemap="#image-map" />
         <canvas id="myCanvas" width="1920px" height="1080px"></canvas>
     </div>
 
@@ -260,8 +260,15 @@
              /*X  23 */["Any Augmented Weapon"],
              /*Y  24 */["Staff of Herding"],
              /*Z  25 */["1600 Blood Shards"],
-            ["UNLOCK COMPLETE"],
-            ["UNLOCK COMPLETE"] // Extra node because we have a "fake" node representing full completion
+            // ["UNLOCK COMPLETE"],
+            // ["UNLOCK COMPLETE"] // Extra node because we have a "fake" node representing full completion
+        ];
+
+        // Some of the Offers suck to print. So let's hack it up :facepalm:
+        const SpecialOffers = [
+            [4, "20 Forgotten Souls, 10 Each Bounty Mat"],
+            [10, "1 Flawless Royal Emerald, 30 Each Bounty Mat"],
+            [19, "Ancient Puzzle Ring, 50 Each Bounty Mat"]
         ];
 
         // Potions are nodes 26 27 28
@@ -369,6 +376,49 @@
             context.fillText(txt, NodeCenters[nodeIdx][0], NodeCenters[nodeIdx][1] + desc[1]);
         }
 
+        function printListCell(x, y, width, height, color, numStr, text) {
+            // Draw our box
+            var numx = Math.min(40, width / 10);
+            context.beginPath();
+            context.lineWidth = 6;
+            context.strokeStyle = 'black';
+            context.fillStyle = color;
+            context.strokeRect(x, y, x + numx, height);
+            context.fillRect(x, y, x + numx, height);
+            context.strokeRect(x + numx, y, width - numx, height);
+            context.fillRect(x + numx, y, width - numx, height);
+
+            context.textAlign = "left";
+            context.fillStyle = "black";
+            context.font = "bold 12px Arial";
+            context.fillText(numStr, x + 8, y + (height / 2) + 3);
+            context.fillText(text, x + numx + 5, y + (height / 2) + 3);
+        }
+
+        function printOfferTable() {
+            var startX = 40;
+            var startY = 130;
+            var height = 30;
+            var width = 480;
+            printListCell(startX, startY, width, height, '#9f80ff', '#', "Offer Materials");
+            var curOffset = height;
+            Offerings.forEach((offer, index) => {
+                offer = offer.join(", ");
+                // Some offers to print in the table, so check for special renderings
+                SpecialOffers.forEach(offerInfo => {
+                    if (offerInfo[0] == index) {
+                        offer = offerInfo[1];
+                    }
+                });
+                var color = '#e4cca8'; // Tan background by default
+                if (index < CurSel - CurPotion) {
+                    color = "green";
+                }
+                printListCell(startX, startY + curOffset, width, height, color, (index + 1).toString(), offer);
+                curOffset += height;
+            });
+        }
+
         function printOfferings() {
             // Draw our box
             // context.beginPath();
@@ -379,33 +429,35 @@
             // context.strokeStyle = '#ffbf00'; // Gold color
             // context.strokeRect(620, 350, 180, 230);
 
-            // Write our current Offer Number
-            var offerNum = (CurSel - CurPotion + 1).toString();
-            context.font = "28px Arial";
-            context.textAlign = "center";
-            context.strokeStyle = 'black';
-            context.fillStyle = 'white';
-            context.lineWidth = 6;
-            context.miterLimit = 1;
-            context.strokeText(offerNum, 707, 380);
-            context.fillText(offerNum, 707, 380);
-
-
             // Write the current offer
-            var offer = Offerings[CurSel - CurPotion];
-            var curOffset = 0;
-            offer.forEach(item => {
-                // Display the words for Description box
-                context.font = "14px Arial";
-                context.textAlign = "left";
+            if (Offerings.length > CurSel - CurPotion) {
+                // Write our current Offer Number
+                var offerNum = (CurSel - CurPotion + 1).toString();
+                context.font = "28px Arial";
+                context.textAlign = "center";
                 context.strokeStyle = 'black';
                 context.fillStyle = 'white';
-                context.lineWidth = 4;
+                context.lineWidth = 6;
                 context.miterLimit = 1;
-                context.strokeText(item, 630, 405 + curOffset);
-                context.fillText(item, 630, 405 + curOffset);
-                curOffset += 25;
-            });
+                context.strokeText(offerNum, 707, 380);
+                context.fillText(offerNum, 707, 380);
+
+
+                var offer = Offerings[CurSel - CurPotion];
+                var curOffset = 0;
+                offer.forEach(item => {
+                    // Display the words for Description box
+                    context.font = "14px Arial";
+                    context.textAlign = "left";
+                    context.strokeStyle = 'black';
+                    context.fillStyle = 'white';
+                    context.lineWidth = 4;
+                    context.miterLimit = 1;
+                    context.strokeText(item, 630, 405 + curOffset);
+                    context.fillText(item, 630, 405 + curOffset);
+                    curOffset += 25;
+                });
+            }
 
             // Repeat for Potion Offerings
             context.font = "20px Arial";
@@ -422,7 +474,7 @@
             context.fillText(potionLabel, 630, 690);
             offer = OfferingsPotions[CurPotion];
             curOffset = 0;
-            // Write the current offer
+            // Write the current Potion offer
             offer.forEach(item => {
                 // Display the words for Description box
                 context.font = "16px Arial";
@@ -435,6 +487,8 @@
                 context.fillText(item, 625, 715 + curOffset);
                 curOffset += 25;
             });
+
+            printOfferTable();
         }
 
         function drawMap() {
@@ -449,7 +503,7 @@
             context.strokeRect(630, 585, 150, 50);
 
             // Display the words for Description box
-            context.font = "16px Arial";
+            context.font = "bold 16px Arial";
             context.textAlign = "center";
             context.strokeStyle = 'black';
             context.lineWidth = 4;
