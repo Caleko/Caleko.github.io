@@ -371,13 +371,13 @@
 
         function printOfferings() {
             // Draw our box
-            context.beginPath();
-            context.lineWidth = 5;
-            context.strokeStyle = 'black';
-            context.strokeRect(620, 350, 180, 230);
-            context.lineWidth = 3;
-            context.strokeStyle = '#ffbf00'; // Gold color
-            context.strokeRect(620, 350, 180, 230);
+            // context.beginPath();
+            // context.lineWidth = 5;
+            // context.strokeStyle = 'black';
+            // context.strokeRect(620, 350, 180, 230);
+            // context.lineWidth = 3;
+            // context.strokeStyle = '#ffbf00'; // Gold color
+            // context.strokeRect(620, 350, 180, 230);
 
             // Write our current Offer Number
             var offerNum = (CurSel - CurPotion + 1).toString();
@@ -408,19 +408,31 @@
             });
 
             // Repeat for Potion Offerings
+            context.font = "20px Arial";
+            context.textAlign = "left";
+            context.strokeStyle = 'black';
+            context.fillStyle = 'white';
+            context.lineWidth = 6;
+            context.miterLimit = 1;
+            var potionLabel = "Potion Offer " + (CurPotion + 1).toString();
+            if (CurPotion >= 3) {
+                potionLabel = "Potions";
+            }
+            context.strokeText(potionLabel, 630, 690);
+            context.fillText(potionLabel, 630, 690);
             offer = OfferingsPotions[CurPotion];
             curOffset = 0;
             // Write the current offer
             offer.forEach(item => {
                 // Display the words for Description box
-                context.font = "14px Arial";
+                context.font = "16px Arial";
                 context.textAlign = "left";
                 context.strokeStyle = 'black';
-                context.lineWidth = 4;
-                context.fillStyle = 'cyan';
+                context.lineWidth = 2;
+                context.fillStyle = '#ff00ff';
                 context.miterLimit = 1;
-                context.strokeText(item, 630, 565 + curOffset);
-                context.fillText(item, 630, 565 + curOffset);
+                context.strokeText(item, 625, 715 + curOffset);
+                context.fillText(item, 625, 715 + curOffset);
                 curOffset += 25;
             });
         }
