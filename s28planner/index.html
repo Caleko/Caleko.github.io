@@ -44,7 +44,8 @@
             title="Items have no level requirement.">
 
         <area onclick="ToggleNode(3)" href="#dne" coords="868,510,34" shape="circle" title="+200 Damage">
-        <area onclick="ToggleNode(4)" href="#dne" coords="984,510,34" shape="circle" title="+25% Missile Damage Reduction">
+        <area onclick="ToggleNode(4)" href="#dne" coords="984,510,34" shape="circle"
+            title="+25% Missile Damage Reduction">
         <area onclick="ToggleNode(5)" href="#dne" coords="1101,510,34" shape="circle"
             title="+25% Movement Speed (Uncapped)">
         <area onclick="ToggleNode(6)" href="#dne" coords="1217,510,34" shape="circle"
@@ -53,7 +54,8 @@
         <area onclick="ToggleNode(7)" href="#dne" coords="1044,568,34" shape="circle"
             title="Picking up Health Globes grants a shield for 5% of your maximum health for 7 seconds. Max stacks 5.">
 
-        <area onclick="ToggleNode(8)" href="#dne" coords="868,625,34" shape="circle" title="+25% Melee Damage Reduction.">
+        <area onclick="ToggleNode(8)" href="#dne" coords="868,625,34" shape="circle"
+            title="+25% Melee Damage Reduction.">
         <area onclick="ToggleNode(9)" href="#dne" coords="1044,625,34" shape="circle"
             title="Increases your highest elemental skill damage bonus by 10%.">
         <area onclick="ToggleNode(10)" href="#dne" coords="1217,625,34" shape="circle"
@@ -76,7 +78,8 @@
             title="Gain immunity to crowd-controlling effects.">
         <area onclick="ToggleNode(19)" href="#dne" coords="1217,743,34" shape="circle" title="Gain passability.">
 
-        <area onclick="ToggleNode(20)" href="#dne" coords="810,800,34" shape="circle" title="Pets pick up Death's Breath.">
+        <area onclick="ToggleNode(20)" href="#dne" coords="810,800,34" shape="circle"
+            title="Pets pick up Death's Breath.">
         <area onclick="ToggleNode(21)" href="#dne" coords="926,800,34" shape="circle"
             title="Elite packs drop one additional progress orb.">
         <area onclick="ToggleNode(22)" href="#dne" coords="984,800,34" shape="circle"
@@ -95,7 +98,8 @@
         <area onclick="ToggleNode(28)" href="#dne" coords="1222,860,34" shape="circle"
             title="When you drink your health potion, gain a random shrine or pylon effect.">
 
-        <area onclick="ToggleDescriptions()" href="#dne" coords="634,588,781,631" shape="rect" title="Toggle Descriptions">
+        <area onclick="ToggleDescriptions()" href="#dne" coords="634,588,781,631" shape="rect"
+            title="Toggle Descriptions">
     </map>
 
 
@@ -274,6 +278,7 @@
         // Potions are nodes 26 27 28
         const PotionIndexStart = 26;
         const PotionIndexEnd = 28;
+        function isNodePotion(index) {return index >= PotionIndexStart && index <= PotionIndexEnd;}
         const OfferingsPotions = [
              /*AA  26*/["55 Primordial Ashes"],
              /*AB  27*/["110 Primordial Ashes"],
@@ -318,6 +323,17 @@
         let canvas = document.getElementById('myCanvas');
         let context = canvas.getContext('2d');
 
+        const ColorLineActive = "green";// "#ffc61a";//"green";
+        const ColorLineAvailable = "gray";
+        const ColorPrimordial = "#ff4000";//"#ff00ff";
+        const ColorDescription = "#00ffff";
+        const ColorTableHeader = "red";//"#cc0000";//"#9f80ff"; // purple
+
+        const ColorTableActive1 = "#00cc66";
+        const ColorTableActive2 = "#66ffb3";
+        const ColorTableInactive = "#cccccc";// "#e4cca8"; // tan
+        const ColorPotion = ColorPrimordial;//"#ff00ff";
+        const ColorNumbers = "#ffbf00";
         let CurSel = 0;
         let CurPotion = 0;
         function ToggleNode(idx) {
@@ -335,7 +351,7 @@
                     Toggles[idx] = ++CurSel;
 
                     // Special handling for Potions
-                    if (idx >= PotionIndexStart && idx <= PotionIndexEnd) {
+                    if (isNodePotion(idx)) {
                         CurPotion++;
                     }
                 }
@@ -353,7 +369,7 @@
                         Toggles[index] = 0;
 
                         // Special handling for Potions
-                        if (index >= PotionIndexStart && index <= PotionIndexEnd) {
+                        if(isNodePotion(index)){
                             CurPotion--;
                         }
                     }
@@ -368,23 +384,27 @@
             context.textAlign = "center";
             context.strokeStyle = 'black';
             context.lineWidth = 3;
-            context.fillStyle = '#00ffff';
             var desc = NodeDescriptions[nodeIdx];
             var txt = desc[0];
             context.miterLimit = 1;
+            context.fillStyle = ColorDescription;
+            if(isNodePotion(nodeIdx))
+            {
+                context.fillStyle = ColorPotion;
+            }
             context.strokeText(txt, NodeCenters[nodeIdx][0], NodeCenters[nodeIdx][1] + desc[1]);
             context.fillText(txt, NodeCenters[nodeIdx][0], NodeCenters[nodeIdx][1] + desc[1]);
         }
 
-        function printListCell(x, y, width, height, color, numStr, text) {
+        function printListCell(x, y, width, height, colorBg, numStr, text) {
             // Draw our box
             var numx = Math.min(40, width / 10);
             context.beginPath();
             context.lineWidth = 6;
             context.strokeStyle = 'black';
-            context.fillStyle = color;
-            context.strokeRect(x, y, x + numx, height);
-            context.fillRect(x, y, x + numx, height);
+            context.fillStyle = colorBg;
+            context.strokeRect(x, y, numx, height);
+            context.fillRect(x, y, numx, height);
             context.strokeRect(x + numx, y, width - numx, height);
             context.fillRect(x + numx, y, width - numx, height);
 
@@ -400,7 +420,7 @@
             var startY = 130;
             var height = 30;
             var width = 480;
-            printListCell(startX, startY, width, height, '#9f80ff', '#', "Offer Materials");
+            printListCell(startX, startY, width, height, ColorTableHeader, '#', "Offer Materials");
             var curOffset = height;
             Offerings.forEach((offer, index) => {
                 offer = offer.join(", ");
@@ -410,13 +430,44 @@
                         offer = offerInfo[1];
                     }
                 });
-                var color = '#e4cca8'; // Tan background by default
+                var color = ColorTableInactive;
                 if (index < CurSel - CurPotion) {
-                    color = "green";
+                    color = ColorTableActive1;
+                    if ((index+1) % 2) {
+                        color = ColorTableActive2;
+                    }
                 }
                 printListCell(startX, startY + curOffset, width, height, color, (index + 1).toString(), offer);
                 curOffset += height;
             });
+        }
+
+        function printActivePowers() {
+            var startX = 1400;
+            var startY = 130;
+            var height = 30;
+            var width = 320;
+            printListCell(startX, startY, width, height, ColorTableHeader, '#', "Active Rites");
+            var curOffset = height;
+            var numActive = CurSel;
+            for (i = 1; i <= numActive; i++) {
+                Toggles.forEach((selectionNum, index) => {
+                    if (i == selectionNum) {
+                        // Dark and light shades of green
+                        var color = ColorTableActive1;
+                        if (i % 2) {
+                            color = ColorTableActive2;
+                        }
+                        // Check if it's a potion power, for pretty colors
+                        if(isNodePotion(index))
+                        {
+                            color = ColorPotion;
+                        }
+                        printListCell(startX, startY + curOffset, width, height, color, i.toString(), NodeDescriptions[index][0]);
+                        curOffset += height;
+                    }
+                });
+            }
         }
 
         function printOfferings() {
@@ -481,7 +532,7 @@
                 context.textAlign = "left";
                 context.strokeStyle = 'black';
                 context.lineWidth = 2;
-                context.fillStyle = '#ff00ff';
+                context.fillStyle = ColorPrimordial;
                 context.miterLimit = 1;
                 context.strokeText(item, 625, 715 + curOffset);
                 context.fillText(item, 625, 715 + curOffset);
@@ -489,6 +540,7 @@
             });
 
             printOfferTable();
+            printActivePowers();
         }
 
         function drawMap() {
@@ -538,10 +590,10 @@
 
                                 // set line color
                                 if (toggle != 0 && Toggles[element] != 0) {
-                                    context.strokeStyle = 'green';
+                                    context.strokeStyle = ColorLineActive;
                                 }
                                 else {
-                                    context.strokeStyle = 'gray';
+                                    context.strokeStyle = ColorLineAvailable;
 
                                 }
                                 context.stroke();
@@ -556,7 +608,11 @@
                     context.beginPath();
                     context.arc(NodeCenters[nodeIdx][0], NodeCenters[nodeIdx][1], 23, 0, 2 * Math.PI)
                     context.lineWidth = 3;
-                    context.strokeStyle = 'green';
+                    context.strokeStyle = ColorLineActive;
+                    if(isNodePotion(nodeIdx))
+                    {
+                        context.strokeStyle = ColorPotion;
+                    }
                     context.stroke();
                 }
             });
@@ -574,7 +630,7 @@
                     context.textAlign = "center";
                     context.strokeStyle = 'black';
                     context.lineWidth = 4;
-                    context.fillStyle = '#ffbf00'; // Gold Color
+                    context.fillStyle = ColorNumbers;
                     var txt = toggle.toString();
                     context.miterLimit = 1;
                     context.strokeText(txt, NodeCenters[nodeIdx][0], NodeCenters[nodeIdx][1] + 11);
