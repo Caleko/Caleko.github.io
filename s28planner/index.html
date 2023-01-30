@@ -30,7 +30,7 @@
     <!-- Container overlapping Canvas and Image -->
     <div width=100% height=100% position="relative">
         <!-- "https://bnetcmsus-a.akamaihd.net/cms/page_media/RUQJUGNI5EWW1674699910911.jpg" -->
-        <img id="myImg" src="images/altar_base4.jpg" usemap="#image-map" />
+        <img id="myImg" src="images/altar_base5.jpg" usemap="#image-map" />
         <canvas id="myCanvas" width="1920px" height="1080px"></canvas>
     </div>
 
@@ -69,6 +69,7 @@
         <area onclick="ToggleNode(27)" coords="1044,860,34" shape="circle" style="cursor: pointer" title="When you drink your health potion, all enemies within 25 yards deal 25% less damage.">
         <area onclick="ToggleNode(28)" coords="1222,860,34" shape="circle" style="cursor: pointer" title="When you drink your health potion, gain a random shrine or pylon effect.">
 
+        <area onclick="ToggleLabels()" coords="634,536,781,581" shape="rect" style="cursor: pointer" title="Toggle Labels">
         <area onclick="ToggleDescriptions()" coords="634,588,781,631" shape="rect" style="cursor: pointer" title="Toggle Descriptions">
         <area onclick="SaveState()" coords="1105,133,1250,175" shape="rect" style="cursor: pointer" title="Save">
         <area coords="865,1042,1041,1070" href="https://discord.gg/rdiablo" target="_blank" shape="rect" style="cursor: pointer" title="Join the /r/Diablo Discord!">
@@ -79,6 +80,8 @@
     <script type="application/javascript">
         let ShowDescriptions = true;
         function ToggleDescriptions() { ShowDescriptions = !ShowDescriptions; RenderPlanner(); }
+        let ShowLabels = false;
+        function ToggleLabels() { ShowLabels = !ShowLabels; RenderPlanner(); }
 
         const Toggles = Array(30).fill(0);
         const LineMap = [
@@ -209,6 +212,39 @@
              /*AB  27*/["-25% Dmg within 25yds", +25],
              /*AC  28*/["Random Shrine/Pylon Power", -14],
              /*AD  29*/["Double Primals  &  Wings of Terror", +48],
+        ];
+
+        const NodeLabels = [
+             /*A   0 */"A",
+             /*B   1 */"B",
+             /*C   2 */"C",
+             /*D   3 */"D",
+             /*E   4 */"E",
+             /*F   5 */"F",
+             /*G   6 */"G",
+             /*H   7 */"H",
+             /*I   8 */"I",
+             /*J   9 */"J",
+             /*K  10 */"K",
+             /*L  11 */"L",
+             /*M  12 */"M",
+             /*N  13 */"N",
+             /*O  14 */"O",
+             /*P  15 */"P",
+             /*Q  16 */"Q",
+             /*R  17 */"R",
+             /*S  18 */"S",
+             /*T  19 */"T",
+             /*U  20 */"U",
+             /*V  21 */"V",
+             /*W  22 */"W",
+             /*X  23 */"X",
+             /*Y  24 */"Y",
+             /*Z  25 */"Z",
+             /*AA  26*/"AA",
+             /*AB  27*/"AB",
+             /*AC  28*/"AC",
+             /*AD  29*/"AD",
         ];
         const Offerings = [
              /*A   0 */["10 Reusable Parts"],
@@ -485,6 +521,11 @@
                             printNumber = '**';
                             color = ColorFinalReward;
                         }
+
+                        // If we're showing labels, switch over entirely
+                        if (ShowLabels) {
+                            printNumber = NodeLabels[index];
+                        }
                         PrintListCell(startX, startY + curOffset, width, height, color, printNumber.toString(), NodeDescriptions[index][0]);
                         curOffset += height;
                     }
@@ -512,8 +553,8 @@
                 context.fillStyle = 'white';
                 context.lineWidth = 6;
                 context.miterLimit = 1;
-                context.strokeText(offerNum, 707, 380);
-                context.fillText(offerNum, 707, 380);
+                context.strokeText(offerNum, 707, 375);
+                context.fillText(offerNum, 707, 375);
 
 
                 var offer = Offerings[CurSel - CurPotion];
@@ -526,8 +567,8 @@
                     context.fillStyle = 'white';
                     context.lineWidth = 4;
                     context.miterLimit = 1;
-                    context.strokeText(item, 630, 405 + curOffset);
-                    context.fillText(item, 630, 405 + curOffset);
+                    context.strokeText(item, 630, 400 + curOffset);
+                    context.fillText(item, 630, 400 + curOffset);
                     curOffset += 25;
                 });
             }
@@ -564,7 +605,7 @@
 
         function RenderPlanner() {
             context.clearRect(0, 0, canvas.width, canvas.height);
-            // Display the words for Description box
+            // Display the words for Labels and Description boxes
             context.font = "bold 14px Arial";
             context.textAlign = "center";
             context.strokeStyle = 'black';
@@ -580,6 +621,18 @@
             context.miterLimit = 1;
             context.strokeText(txt, 705, 615);
             context.fillText(txt, 705, 615);
+            // Show Labels Toggle Text
+            if (ShowLabels) {
+                context.fillStyle = 'red';
+                txt = "Hide Labels";
+            }
+            else {
+                context.fillStyle = 'green';
+                txt = "Show Labels";
+            }
+            context.miterLimit = 1;
+            context.strokeText(txt, 705, 564);
+            context.fillText(txt, 705, 564);
 
             // Display the words for Save/Export box
             context.font = "bold 16px Arial";
@@ -629,7 +682,7 @@
                 if (toggle != 0 && nodeIdx < Toggles.length - 1) {
                     context.beginPath();
                     context.arc(NodeCenters[nodeIdx][0], NodeCenters[nodeIdx][1], 23, 0, 2 * Math.PI)
-                    context.lineWidth = 3;
+                    context.lineWidth = 4;
                     context.strokeStyle = ColorLineActive;
                     if (isPotion(nodeIdx)) {
                         context.strokeStyle = ColorPotion;
@@ -643,42 +696,58 @@
                     PrintDescription(idx);
                 });
             }
-            // Print Numbers
-            var curPotion = 0;
-            for (i = 1; i <= CurSel; i++) {
-                Toggles.forEach((selectionNum, index) => {
-                    if (i == selectionNum) {
-
-                        // Check if it's our final reward
-                        if (index == Toggles.length - 1) {
-                            drawing = new Image();
-                            drawing.onload = function () {
-                                var x = NodeCenters[index][0] - (drawing.width / 2);
-                                var y = NodeCenters[index][1] - (drawing.height / 2);
-                                context.drawImage(drawing, x, y);
-                            };
-                            drawing.src = "images/wings.png";
-                        }
-                        else {
-                            context.font = "30px Arial";
-                            context.textAlign = "center";
-                            context.strokeStyle = 'black';
-                            context.lineWidth = 4;
-                            context.fillStyle = ColorNumbers;
-                            context.miterLimit = 1;
-
-                            // Check if it's a potion power
-                            var printNumber = i - curPotion;
-                            if (isPotion(index)) {
-                                color = ColorPotion;
-                                printNumber = ++curPotion;
-                            }
-                            var txt = printNumber.toString();
-                            context.strokeText(txt, NodeCenters[index][0], NodeCenters[index][1] + 11);
-                            context.fillText(txt, NodeCenters[index][0], NodeCenters[index][1] + 11);
-                        }
-                    }
+            // Print Labels/Numbers
+            if (ShowLabels) {
+                Toggles.forEach((val, index) => {
+                    context.font = "30px Arial";
+                    context.textAlign = "center";
+                    context.strokeStyle = 'black';
+                    context.lineWidth = 4;
+                    context.fillStyle = ColorNumbers;
+                    context.miterLimit = 1;
+                    var txt = NodeLabels[index];
+                    context.strokeText(txt, NodeCenters[index][0], NodeCenters[index][1] + 11);
+                    context.fillText(txt, NodeCenters[index][0], NodeCenters[index][1] + 11);
                 });
+            }
+            else {
+                // Print Node Numbers
+                var curPotion = 0;
+                for (i = 1; i <= CurSel; i++) {
+                    Toggles.forEach((selectionNum, index) => {
+                        if (i == selectionNum) {
+
+                            // Check if it's our final reward
+                            if (index == Toggles.length - 1) {
+                                drawing = new Image();
+                                drawing.onload = function () {
+                                    var x = NodeCenters[index][0] - (drawing.width / 2);
+                                    var y = NodeCenters[index][1] - (drawing.height / 2);
+                                    context.drawImage(drawing, x, y);
+                                };
+                                drawing.src = "images/wings.png";
+                            }
+                            else {
+                                context.font = "30px Arial";
+                                context.textAlign = "center";
+                                context.strokeStyle = 'black';
+                                context.lineWidth = 4;
+                                context.fillStyle = ColorNumbers;
+                                context.miterLimit = 1;
+
+                                // Check if it's a potion power
+                                var printNumber = i - curPotion;
+                                if (isPotion(index)) {
+                                    color = ColorPotion;
+                                    printNumber = ++curPotion;
+                                }
+                                var txt = printNumber.toString();
+                                context.strokeText(txt, NodeCenters[index][0], NodeCenters[index][1] + 11);
+                                context.fillText(txt, NodeCenters[index][0], NodeCenters[index][1] + 11);
+                            }
+                        }
+                    });
+                }
             }
 
             PrintOfferings();
