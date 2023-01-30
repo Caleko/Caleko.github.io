@@ -176,7 +176,7 @@
              /*AA  26*/[868, 860],
              /*AB  27*/[1044, 860],
              /*AC  28*/[1222, 860],
-             /*AD  29*/[1045, 938],
+             /*AD  29*/[1045, 920],
         ];
         const NodeDescriptions = [
              /*A   0 */["Double Kill Streak", -14],
@@ -208,7 +208,7 @@
              /*AA  26*/["Triune Circles", -14],
              /*AB  27*/["-25% Dmg within 25yds", +25],
              /*AC  28*/["Random Shrine/Pylon Power", -14],
-             /*AD  29*/["Double Primals && Diablo Wings!", +25],
+             /*AD  29*/["Double Primals  &  Wings of Terror", +48],
         ];
         const Offerings = [
              /*A   0 */["10 Reusable Parts"],
@@ -251,7 +251,7 @@
         // Potions are nodes 26 27 28
         const PotionIndexStart = 26;
         const PotionIndexEnd = 28;
-        function isNodePotion(index) { return index >= PotionIndexStart && index <= PotionIndexEnd; }
+        function isPotion(nodeIndex) { return nodeIndex >= PotionIndexStart && nodeIndex <= PotionIndexEnd; }
         const OfferingsPotions = [
              /*AA  26*/["55 Primordial Ashes"],
              /*AB  27*/["110 Primordial Ashes"],
@@ -296,19 +296,23 @@
         let canvas = document.getElementById('myCanvas');
         let context = canvas.getContext('2d');
 
+        // State parameter (URL Search Field, ie:  "index.html?s=STATE")
         const SearchParamState = 's';
+
+        const ColorNumbers = "#ffbf00";
+        const ColorDescription = "#00ffff";
+        const ColorPrimordial = "#ff4000";//"#ff00ff";
+        const ColorPotion = ColorPrimordial;//"#ff00ff";
+        const ColorFinalReward = "#ff00ff"; // Fuschia
 
         const ColorLineActive = "green";// "#ffc61a";//"green";
         const ColorLineAvailable = "gray";
-        const ColorPrimordial = "#ff4000";//"#ff00ff";
-        const ColorDescription = "#00ffff";
-        const ColorTableHeader = "#821417";//"red";//"#cc0000";//"#9f80ff"; // purple
 
+        const ColorTableHeader = "#821417";//"red";//"#cc0000";//"#9f80ff"; // purple        
         const ColorTableActive1 = "#00cc00";//"#00cc66";
         const ColorTableActive2 = "#009900";//"#66ffb3";
         const ColorTableInactive = "#cccccc";// "#e4cca8"; // tan
-        const ColorPotion = ColorPrimordial;//"#ff00ff";
-        const ColorNumbers = "#ffbf00";
+
         let CurSel = 0;
         let CurPotion = 0;
 
@@ -332,7 +336,7 @@
                 stateStr = stateStr.substring(2);
                 if (curVal > 0) {
                     CurSel++;
-                    if (isNodePotion(curInd)) {
+                    if (isPotion(curInd)) {
                         CurPotion++;
                     }
                 }
@@ -362,14 +366,14 @@
                     Toggles[idx] = ++CurSel;
 
                     // Special handling for Potions
-                    if (isNodePotion(idx)) {
+                    if (isPotion(idx)) {
                         CurPotion++;
                     }
                 }
 
                 // Special handling for full completion
-                if (CurSel == 29) {
-                    Toggles[CurSel++] = 30;
+                if (CurSel == Toggles.length - 1) {
+                    Toggles[CurSel++] = Toggles.length;
                 }
             }
             else {
@@ -380,7 +384,7 @@
                         Toggles[index] = 0;
 
                         // Special handling for Potions
-                        if (isNodePotion(index)) {
+                        if (isPotion(index)) {
                             CurPotion--;
                         }
                     }
@@ -400,7 +404,7 @@
             var txt = desc[0];
             context.miterLimit = 1;
             context.fillStyle = ColorDescription;
-            if (isNodePotion(nodeIdx)) {
+            if (isPotion(nodeIdx)) {
                 context.fillStyle = ColorPotion;
             }
             context.strokeText(txt, NodeCenters[nodeIdx][0], NodeCenters[nodeIdx][1] + desc[1]);
@@ -427,7 +431,7 @@
         }
 
         function PrintOfferTable() {
-            var startX = 40;
+            var startX = 60;
             var startY = 130;
             var height = 30;
             var width = 480;
@@ -455,7 +459,7 @@
 
         function PrintActivePowers() {
             var startX = 1400;
-            var startY = 130;
+            var startY = 120;
             var height = 30;
             var width = 320;
             PrintListCell(startX, startY, width, height, ColorTableHeader, '#', "Active Rites");
@@ -472,9 +476,14 @@
                             color = ColorTableActive2;
                         }
                         // Check if it's a potion power, for pretty colors
-                        if (isNodePotion(index)) {
+                        if (isPotion(index)) {
                             color = ColorPotion;
                             printNumber = ++curPotion;
+                        }
+                        // Check if it's the final Reward Node
+                        if (index == Toggles.length - 1) {
+                            printNumber = '**';
+                            color = ColorFinalReward;
                         }
                         PrintListCell(startX, startY + curOffset, width, height, color, printNumber.toString(), NodeDescriptions[index][0]);
                         curOffset += height;
@@ -616,12 +625,13 @@
             });
             // Print Circles
             Toggles.forEach((toggle, nodeIdx) => {
-                if (toggle != 0) {
+                // If node is set, and it's not the final reward Node
+                if (toggle != 0 && nodeIdx < Toggles.length - 1) {
                     context.beginPath();
                     context.arc(NodeCenters[nodeIdx][0], NodeCenters[nodeIdx][1], 23, 0, 2 * Math.PI)
                     context.lineWidth = 3;
                     context.strokeStyle = ColorLineActive;
-                    if (isNodePotion(nodeIdx)) {
+                    if (isPotion(nodeIdx)) {
                         context.strokeStyle = ColorPotion;
                     }
                     context.stroke();
@@ -638,22 +648,35 @@
             for (i = 1; i <= CurSel; i++) {
                 Toggles.forEach((selectionNum, index) => {
                     if (i == selectionNum) {
-                        context.font = "30px Arial";
-                        context.textAlign = "center";
-                        context.strokeStyle = 'black';
-                        context.lineWidth = 4;
-                        context.fillStyle = ColorNumbers;
-                        context.miterLimit = 1;
 
-                        // Check if it's a potion power
-                        var printNumber = i - curPotion;
-                        if (isNodePotion(index)) {
-                            color = ColorPotion;
-                            printNumber = ++curPotion;
+                        // Check if it's our final reward
+                        if (index == Toggles.length - 1) {
+                            drawing = new Image();
+                            drawing.onload = function () {
+                                var x = NodeCenters[index][0] - (drawing.width / 2);
+                                var y = NodeCenters[index][1] - (drawing.height / 2);
+                                context.drawImage(drawing, x, y);
+                            };
+                            drawing.src = "images/wings.png";
                         }
-                        var txt = printNumber.toString();
-                        context.strokeText(txt, NodeCenters[index][0], NodeCenters[index][1] + 11);
-                        context.fillText(txt, NodeCenters[index][0], NodeCenters[index][1] + 11);
+                        else {
+                            context.font = "30px Arial";
+                            context.textAlign = "center";
+                            context.strokeStyle = 'black';
+                            context.lineWidth = 4;
+                            context.fillStyle = ColorNumbers;
+                            context.miterLimit = 1;
+
+                            // Check if it's a potion power
+                            var printNumber = i - curPotion;
+                            if (isPotion(index)) {
+                                color = ColorPotion;
+                                printNumber = ++curPotion;
+                            }
+                            var txt = printNumber.toString();
+                            context.strokeText(txt, NodeCenters[index][0], NodeCenters[index][1] + 11);
+                            context.fillText(txt, NodeCenters[index][0], NodeCenters[index][1] + 11);
+                        }
                     }
                 });
             }
