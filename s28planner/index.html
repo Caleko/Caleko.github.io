@@ -6,6 +6,15 @@
         body {
             margin: 0px;
             padding: 0px;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+        }
+
+        #divContainer {
+            position:relative;
+            height: 100%;
+            width: 100%;
         }
 
         #myImg {
@@ -18,8 +27,8 @@
         #myCanvas {
             pointer-events: none;
             position: absolute;
-            left: 0px;
             top: 0px;
+            left: 0px;
             z-index: 2;
         }
     </style>
@@ -28,8 +37,8 @@
 <body>
     <title>S28 Altar Planner - Diablo 3 - by Caleko</title>
     <!-- Container overlapping Canvas and Image -->
-    <div width=100% height=100% position="relative">
-        <!-- "https://bnetcmsus-a.akamaihd.net/cms/page_media/RUQJUGNI5EWW1674699910911.jpg" -->
+    <div id="divContainer">
+        <!-- " https://bnetcmsus-a.akamaihd.net/cms/page_media/RUQJUGNI5EWW1674699910911.jpg" -->
         <img id="myImg" src="images/altar_base5.jpg" usemap="#image-map" />
         <canvas id="myCanvas" width="1920px" height="1080px"></canvas>
     </div>
