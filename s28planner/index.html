@@ -368,14 +368,15 @@
             var curInd = 0;
             while (stateStr.length >= 2) {
                 var curVal = parseInt(stateStr.substring(0, 2), 16);
-                Toggles[curInd++] = curVal;
-                stateStr = stateStr.substring(2);
+                Toggles[curInd] = curVal;
                 if (curVal > 0) {
                     CurSel++;
                     if (isPotion(curInd)) {
                         CurPotion++;
                     }
                 }
+                stateStr = stateStr.substring(2);
+                curInd++;
             }
         }
 
