@@ -780,20 +780,20 @@
         RenderPlanner();
 
 
-        function CenterCanvas() {
-            var cont = document.getElementById('divContainer');
-            if (cont) {
-                var pad = window.innerWidth - cont.clientWidth;
-                if (pad) {
-                    pad = Math.max(0, pad);
-                    pad = pad / 2;
-                    cont.style.left = pad.toString() + "px";
-                }
-            }
-        }
+        // function CenterCanvas() {
+        //     var cont = document.getElementById('divContainer');
+        //     if (cont) {
+        //         var pad = window.innerWidth - cont.clientWidth;
+        //         if (pad) {
+        //             pad = Math.max(0, pad);
+        //             pad = pad / 2;
+        //             cont.style.left = pad.toString() + "px";
+        //         }
+        //     }
+        // }
 
-        addEventListener("resize", CenterCanvas);
-        addEventListener("load", CenterCanvas);
+        // addEventListener("resize", CenterCanvas);
+        // addEventListener("load", CenterCanvas);
 
     </script>
 </body>
