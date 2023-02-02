@@ -11,27 +11,25 @@
             background-color: black;
         }
 
-        area {
-            cursor: pointer;
-        }
-
         #divContainer {
-            /* border: 5px solid green; */
-            position: relative;
-            height: 1080px;
-            width: 1920px;
+            position:relative;
+            height: 100%;
+            width: 100%;
         }
 
         #myImg {
             user-select: none;
-            -webkit-user-drag: none;
             position: absolute;
+            top: 0px;
+            left: 0px;
             z-index: 1;
         }
 
         #myCanvas {
             pointer-events: none;
             position: absolute;
+            top: 0px;
+            left: 0px;
             z-index: 2;
         }
     </style>
@@ -47,42 +45,44 @@
     </div>
 
     <!-- Image Map for clickable Image regions to call ToggleNode -->
-    <map id="image-map">
-        <area onclick="ToggleNode(0)" coords="1043,335,34" shape="circle" title="Your Kill Streak timer duration and reward bonus are doubled.">
-        <area onclick="ToggleNode(1)" coords="926,451,34" shape="circle" title="Pools of Reflection last for the entire Season and are not removed by death.">
-        <area onclick="ToggleNode(2)" coords="1159,451,34" shape="circle" title="Items have no level requirement.">
-        <area onclick="ToggleNode(3)" coords="868,510,34" shape="circle" title="+200 Damage">
-        <area onclick="ToggleNode(4)" coords="984,510,34" shape="circle" title="+25% Missile Damage Reduction">
-        <area onclick="ToggleNode(5)" coords="1101,510,34" shape="circle" title="+25% Movement Speed (Uncapped)">
-        <area onclick="ToggleNode(6)" coords="1217,510,34" shape="circle" title="Increase damage against elites by 15%.">
-        <area onclick="ToggleNode(7)" coords="1044,568,34" shape="circle" title="Picking up Health Globes grants a shield for 5% of your maximum health for 7 seconds. Max stacks 5.">
-        <area onclick="ToggleNode(8)" coords="868,625,34" shape="circle" title="+25% Melee Damage Reduction.">
-        <area onclick="ToggleNode(9)" coords="1044,625,34" shape="circle" title="Increases your highest elemental skill damage bonus by 10%.">
-        <area onclick="ToggleNode(10)" coords="1217,625,34" shape="circle" title="Increase damage against elites by 20%.">
-        <area onclick="ToggleNode(11)" coords="810,684,34" shape="circle" title="+10% Damage">
-        <area onclick="ToggleNode(12)" coords="926,684,34" shape="circle" title="Double the amount of Death's Breaths that drop.">
-        <area onclick="ToggleNode(13)" coords="984,684,34" shape="circle" title="Critical hits grant resource: Mana: 15, Hatred: 5, Wrath: 5, Arcane Power: 3, Fury: 3, Spirit: 5, Essence: 5.">
-        <area onclick="ToggleNode(14)" coords="1100,684,34" shape="circle" title="Double the amount of Bounty Caches that drop from completing bounties.">
-        <area onclick="ToggleNode(15)" coords="1159,684,34" shape="circle" title="Progress orbs from Nephalem and Greater Rifts are picked up automatically.">
-        <area onclick="ToggleNode(16)" coords="1275,684,34" shape="circle" title="Reduces the damage taken from elites by 25%.">
-        <area onclick="ToggleNode(17)" coords="868,743,34" shape="circle" title="+15% Damage">
-        <area onclick="ToggleNode(18)" coords="1044,743,34" shape="circle" title="Gain immunity to crowd-controlling effects.">
-        <area onclick="ToggleNode(19)" coords="1217,743,34" shape="circle" title="Gain passability.">
-        <area onclick="ToggleNode(20)" coords="810,800,34" shape="circle" title="Pets pick up Death's Breath.">
-        <area onclick="ToggleNode(21)" coords="926,800,34" shape="circle" title="Elite packs drop one additional progress orb.">
-        <area onclick="ToggleNode(22)" coords="984,800,34" shape="circle" title="Increase damage done to Bosses by 25%.">
-        <area onclick="ToggleNode(23)" coords="1100,800,34" shape="circle" title="Pets pick up and salvage common, magic, and rare items.">
-        <area onclick="ToggleNode(24)" coords="1159,800,34" shape="circle" title="Increase your chance to Dodge by 15%.">
-        <area onclick="ToggleNode(25)" coords="1275,800,34" shape="circle" title="Double the chance to find a legendary item purchased from Kadala.">
-        <area onclick="ToggleNode(26)" coords="868,860,34" shape="circle"
+    <map name="image-map">
+        <area onclick="ToggleNode(0)" coords="1043,335,34" shape="circle" style="cursor: pointer" title="Your Kill Streak timer duration and reward bonus are doubled.">
+        <area onclick="ToggleNode(1)" coords="926,451,34" shape="circle" style="cursor: pointer" title="Pools of Reflection last for the entire Season and are not removed by death.">
+        <area onclick="ToggleNode(2)" coords="1159,451,34" shape="circle" style="cursor: pointer" title="Items have no level requirement.">
+        <area onclick="ToggleNode(3)" coords="868,510,34" shape="circle" style="cursor: pointer" title="+200 Damage">
+        <area onclick="ToggleNode(4)" coords="984,510,34" shape="circle" style="cursor: pointer" title="+25% Missile Damage Reduction">
+        <area onclick="ToggleNode(5)" coords="1101,510,34" shape="circle" style="cursor: pointer" title="+25% Movement Speed (Uncapped)">
+        <area onclick="ToggleNode(6)" coords="1217,510,34" shape="circle" style="cursor: pointer" title="Increase damage against elites by 15%.">
+        <area onclick="ToggleNode(7)" coords="1044,568,34" shape="circle" style="cursor: pointer"
+            title="Picking up Health Globes grants a shield for 5% of your maximum health for 7 seconds. Max stacks 5.">
+        <area onclick="ToggleNode(8)" coords="868,625,34" shape="circle" style="cursor: pointer" title="+25% Melee Damage Reduction.">
+        <area onclick="ToggleNode(9)" coords="1044,625,34" shape="circle" style="cursor: pointer" title="Increases your highest elemental skill damage bonus by 10%.">
+        <area onclick="ToggleNode(10)" coords="1217,625,34" shape="circle" style="cursor: pointer" title="Increase damage against elites by 20%.">
+        <area onclick="ToggleNode(11)" coords="810,684,34" shape="circle" style="cursor: pointer" title="+10% Damage">
+        <area onclick="ToggleNode(12)" coords="926,684,34" shape="circle" style="cursor: pointer" title="Double the amount of Death's Breaths that drop.">
+        <area onclick="ToggleNode(13)" coords="984,684,34" shape="circle" style="cursor: pointer"
+            title="Critical hits grant resource: Mana: 15, Hatred: 5, Wrath: 5, Arcane Power: 3, Fury: 3, Spirit: 5, Essence: 5.">
+        <area onclick="ToggleNode(14)" coords="1100,684,34" shape="circle" style="cursor: pointer" title="Double the amount of Bounty Caches that drop from completing bounties.">
+        <area onclick="ToggleNode(15)" coords="1159,684,34" shape="circle" style="cursor: pointer" title="Progress orbs from Nephalem and Greater Rifts are picked up automatically.">
+        <area onclick="ToggleNode(16)" coords="1275,684,34" shape="circle" style="cursor: pointer" title="Reduces the damage taken from elites by 25%.">
+        <area onclick="ToggleNode(17)" coords="868,743,34" shape="circle" style="cursor: pointer" title="+15% Damage">
+        <area onclick="ToggleNode(18)" coords="1044,743,34" shape="circle" style="cursor: pointer" title="Gain immunity to crowd-controlling effects.">
+        <area onclick="ToggleNode(19)" coords="1217,743,34" shape="circle" style="cursor: pointer" title="Gain passability.">
+        <area onclick="ToggleNode(20)" coords="810,800,34" shape="circle" style="cursor: pointer" title="Pets pick up Death's Breath.">
+        <area onclick="ToggleNode(21)" coords="926,800,34" shape="circle" style="cursor: pointer" title="Elite packs drop one additional progress orb.">
+        <area onclick="ToggleNode(22)" coords="984,800,34" shape="circle" style="cursor: pointer" title="Increase damage done to Bosses by 25%.">
+        <area onclick="ToggleNode(23)" coords="1100,800,34" shape="circle" style="cursor: pointer" title="Pets pick up and salvage common, magic, and rare items.">
+        <area onclick="ToggleNode(24)" coords="1159,800,34" shape="circle" style="cursor: pointer" title="Increase your chance to Dodge by 15%.">
+        <area onclick="ToggleNode(25)" coords="1275,800,34" shape="circle" style="cursor: pointer" title="Double the chance to find a legendary item purchased from Kadala.">
+        <area onclick="ToggleNode(26)" coords="868,860,34" shape="circle" style="cursor: pointer"
             title="When you drink your health potion, you manifest one of three runic circles on the ground that grant increased damage, increased cooldown reduction, or increased resource cost reduction.">
-        <area onclick="ToggleNode(27)" coords="1044,860,34" shape="circle" title="When you drink your health potion, all enemies within 25 yards deal 25% less damage.">
-        <area onclick="ToggleNode(28)" coords="1222,860,34" shape="circle" title="When you drink your health potion, gain a random shrine or pylon effect.">
+        <area onclick="ToggleNode(27)" coords="1044,860,34" shape="circle" style="cursor: pointer" title="When you drink your health potion, all enemies within 25 yards deal 25% less damage.">
+        <area onclick="ToggleNode(28)" coords="1222,860,34" shape="circle" style="cursor: pointer" title="When you drink your health potion, gain a random shrine or pylon effect.">
 
-        <area onclick="ToggleLabels()" coords="634,536,781,581" shape="rect" title="Toggle Labels">
-        <area onclick="ToggleDescriptions()" coords="634,588,781,631" shape="rect" title="Toggle Descriptions">
-        <area onclick="SaveState()" coords="1105,133,1250,175" shape="rect" title="Save">
-        <area coords="865,1042,1041,1070" href="https://discord.gg/rdiablo" target="_blank" shape="rect" title="Join the /r/Diablo Discord!">
+        <area onclick="ToggleLabels()" coords="634,536,781,581" shape="rect" style="cursor: pointer" title="Toggle Labels">
+        <area onclick="ToggleDescriptions()" coords="634,588,781,631" shape="rect" style="cursor: pointer" title="Toggle Descriptions">
+        <area onclick="SaveState()" coords="1105,133,1250,175" shape="rect" style="cursor: pointer" title="Save">
+        <area coords="865,1042,1041,1070" href="https://discord.gg/rdiablo" target="_blank" shape="rect" style="cursor: pointer" title="Join the /r/Diablo Discord!">
 
     </map>
 
@@ -778,23 +778,6 @@
 
         ParseState();
         RenderPlanner();
-
-
-        function CenterCanvas() {
-            var cont = document.getElementById('divContainer');
-            if (cont) {
-                var pad = window.innerWidth - cont.clientWidth;
-                if (pad) {
-                    pad = Math.max(0, pad);
-                    pad = pad / 2;
-                    cont.style.left = pad.toString() + "px";
-                }
-            }
-        }
-
-        addEventListener("resize", CenterCanvas);
-        addEventListener("load", CenterCanvas);
-
     </script>
 </body>
 
