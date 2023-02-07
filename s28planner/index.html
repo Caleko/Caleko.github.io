@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <script src="imageMapResizer.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/image-map-resizer/1.0.10/js/imageMapResizer.min.js"></script>
     <style>
         body {
             margin: 0;
@@ -358,6 +358,7 @@
         const ColorTableActive1 = "#00cc00";//"#00cc66";
         const ColorTableActive2 = "#009900";//"#66ffb3";
         const ColorTableInactive = "#cccccc";// "#e4cca8"; // tan
+        const ColorTableCurrentOffer = "#ff7b47";// yellow-orange
 
         let CurSel = 0;
         let CurPotion = 0;
@@ -498,6 +499,9 @@
                     if ((index + 1) % 2) {
                         color = ColorTableActive2;
                     }
+                }
+                else if (index == (CurSel - CurPotion)) {
+                    color = ColorTableCurrentOffer;
                 }
                 PrintListCell(startX, startY + curOffset, width, height, color, (index + 1).toString(), offer);
                 curOffset += height;
