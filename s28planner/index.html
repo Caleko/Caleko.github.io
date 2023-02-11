@@ -94,38 +94,6 @@
         function ToggleLabels() { ShowLabels = !ShowLabels; RenderPlanner(); }
 
         const Toggles = Array(30).fill(0);
-        const LineMap = [
-             /*A   0 */[[1, 1026, 351, 944, 432], [2, 1061, 351, 1143, 431]],
-             /*B   1 */[[3, 908, 469, 885, 492], [4, 942, 468, 968, 492]],
-             /*C   2 */[[5, 1144, 471, 1119, 496], [6, 1179, 466, 1203, 490]],
-             /*D   3 */[[7, 890, 517, 1021, 560]],
-             /*E   4 */[[7, 1001, 526, 1025, 552]],
-             /*F   5 */[[7, 1085, 528, 1062, 553]],
-             /*G   6 */[[7, 1194, 518, 1067, 560]],
-             /*H   7 */[[8, 1022, 574, 891, 618], [9, 1043, 589, 1043, 603], [10, 1065, 575, 1194, 617]],
-             /*I   8 */[[11, 852, 644, 827, 668], [12, 884, 642, 911, 667]],
-             /*J   9 */[[13, 1027, 643, 1002, 667], [14, 1060, 642, 1085, 665]],
-             /*K  10 */[[15, 1202, 643, 1177, 668], [16, 1235, 639, 1259, 665]],
-             /*L  11 */[[17, 826, 701, 851, 727]],
-             /*M  12 */[[17, 911, 702, 887, 726]],
-             /*N  13 */[[18, 1000, 699, 1024, 724]],
-             /*O  14 */[[18, 1086, 702, 1062, 726]],
-             /*P  15 */[[19, 1176, 699, 1201, 724]],
-             /*Q  16 */[[19, 1260, 702, 1236, 726]],
-             /*R  17 */[[20, 853, 760, 829, 785], [21, 884, 759, 908, 784], [18, 892, 743, 1017, 743]],
-             /*S  18 */[[22, 1028, 760, 1004, 786], [23, 1060, 759, 1083, 783], [17, 892, 743, 1017, 743], [19, 1067, 743, 1192, 743]],
-             /*T  19 */[[24, 1202, 760, 1177, 785], [25, 1233, 758, 1259, 782], [18, 1067, 743, 1192, 743]],
-             /*U  20 */[[26, 824, 818, 854, 846]],
-             /*V  21 */[[26, 913, 819, 884, 846]],
-             /*W  22 */[[27, 1000, 817, 1028, 846]],
-             /*X  23 */[[27, 1087, 820, 1061, 847]],
-             /*Y  24 */[[28, 1175, 816, 1207, 846]],
-             /*Z  25 */[[28, 1264, 820, 1238, 846]],
-             /*AA  26*/[],
-             /*AB  27*/[],
-             /*AC  28*/[],
-             /*AD  29*/[],
-        ];
         const NodeRequirements = [
             /*A   0 */[],
             /*B   1 */[0],
@@ -171,26 +139,28 @@
              /*I   8 */[868, 625],
              /*J   9 */[1044, 625],
              /*K  10 */[1217, 625],
-             /*L  11 */[810, 684],
-             /*M  12 */[926, 684],
-             /*N  13 */[984, 684],
-             /*O  14 */[1100, 684],
-             /*P  15 */[1159, 684],
-             /*Q  16 */[1275, 684],
-             /*R  17 */[868, 743],
-             /*S  18 */[1044, 743],
-             /*T  19 */[1217, 743],
+             /*L  11 */[810, 683],
+             /*M  12 */[926, 683],
+             /*N  13 */[984, 683],
+             /*O  14 */[1101, 683],
+             /*P  15 */[1159, 683],
+             /*Q  16 */[1275, 683],
+             /*R  17 */[868, 742],
+             /*S  18 */[1043, 742],
+             /*T  19 */[1217, 742],
              /*U  20 */[810, 800],
              /*V  21 */[926, 800],
              /*W  22 */[984, 800],
-             /*X  23 */[1100, 800],
+             /*X  23 */[1101, 800],
              /*Y  24 */[1159, 800],
              /*Z  25 */[1275, 800],
-             /*AA  26*/[868, 860],
-             /*AB  27*/[1044, 860],
-             /*AC  28*/[1222, 860],
+             /*AA  26*/[868, 863],
+             /*AB  27*/[1044, 863],
+             /*AC  28*/[1222, 863],
              /*AD  29*/[1045, 920],
         ];
+
+        // [DescriptionStr, Y-Offset]
         const NodeDescriptions = [
              /*A   0 */["Double Kill Streak", -14],
              /*B   1 */["Perm XP Pools", -14],
@@ -339,29 +309,30 @@
         ];
 
 
-        let canvas = document.getElementById('myCanvas');
-        let context = canvas.getContext('2d');
 
         // State parameter (URL Search Field, ie:  "index.html?s=STATE")
         const SearchParamState = 's';
 
-        const ColorNumbers = "#ffbf00";
-        const ColorDescription = "#00ffff";
-        const ColorPrimordial = "#ff4000";//"#ff00ff";
-        const ColorPotion = ColorPrimordial;//"#ff00ff";
+        const NodeRadius = 23;
+        const ColorNumbers = "#ffbf00"; // Dirty Yellow / Goldish
+        const ColorDescription = "#00ffff"; // Cyan
+        const ColorPrimordial = "#ff4000"; // Dark Red?
+        const ColorPotion = ColorPrimordial;
         const ColorFinalReward = "#ff00ff"; // Fuschia
 
-        const ColorLineActive = "green";// "#ffc61a";//"green";
+        const ColorLineActive = "green";
         const ColorLineAvailable = "gray";
 
-        const ColorTableHeader = "#821417";//"red";//"#cc0000";//"#9f80ff"; // purple
-        const ColorTableActive1 = "#00cc00";//"#00cc66";
-        const ColorTableActive2 = "#009900";//"#66ffb3";
-        const ColorTableInactive = "#cccccc";// "#e4cca8"; // tan
-        const ColorTableCurrentOffer = "#ff7b47";// yellow-orange
+        const ColorTableHeader = "#821417"; // Burnt Red
+        const ColorTableActive1 = "#00cc00"; // Some Green
+        const ColorTableActive2 = "#009900"; // Another Green
+        const ColorTableInactive = "#cccccc"; // grey?
+        const ColorTableCurrentOffer = "#ff7b47"; // yellow-orange
 
         let CurSel = 0;
         let CurPotion = 0;
+        let canvas = document.getElementById('myCanvas');
+        let context = canvas.getContext('2d');
 
         function StateSave() {
             var nodeStr = "";
@@ -390,13 +361,26 @@
                 curInd++;
             }
         }
-
         function SaveState() {
             // Set the node parameter and reload the page
             var params = new URLSearchParams(window.location.search);
             var nodeStr = StateSave();
             params.set(SearchParamState, nodeStr);
             window.location.search = params.toString();
+        }
+
+        function DrawNodeLine(startX, startY, endX, endY, color) {
+            // Get the deltas
+            let angle = Math.atan2(endY - startY, endX - startX);
+            let diffX = Math.cos(angle) * NodeRadius;
+            let diffY = Math.sin(angle) * NodeRadius;
+            // Draw the line
+            context.beginPath();
+            context.moveTo(startX + diffX, startY + diffY);
+            context.lineTo(endX - diffX, endY - diffY);
+            context.lineWidth = 10;
+            context.strokeStyle = color;
+            context.stroke();
         }
 
         function ToggleNode(idx) {
@@ -549,15 +533,6 @@
         }
 
         function PrintOfferings() {
-            // Draw our box
-            // context.beginPath();
-            // context.lineWidth = 5;
-            // context.strokeStyle = 'black';
-            // context.strokeRect(620, 350, 180, 230);
-            // context.lineWidth = 3;
-            // context.strokeStyle = '#ffbf00'; // Gold color
-            // context.strokeRect(620, 350, 180, 230);
-
             // Write the current offer
             if (Offerings.length > CurSel - CurPotion) {
                 // Write our current Offer Number
@@ -667,50 +642,66 @@
             // Print Selection Numbers
 
             // Print Lines
-            Toggles.forEach((toggle, index) => {
-                NodeRequirements[index].forEach(element => {
-                    if (Toggles[element] != 0) {
-                        LineMap[element].forEach(line => {
-                            if (line[0] == index) {
-                                context.beginPath();
-                                context.moveTo(line[1], line[2]);
-                                context.lineTo(line[3], line[4]);
-                                context.lineWidth = 10;
-
-                                // set line color
-                                if (toggle != 0 && Toggles[element] != 0) {
-                                    context.strokeStyle = ColorLineActive;
-                                }
-                                else {
-                                    context.strokeStyle = ColorLineAvailable;
-
-                                }
-                                context.stroke();
-                            }
-                        });
+            for (let nodeIdx = 0; nodeIdx < Toggles.length; nodeIdx++) {
+                for (let reqIdx = 0; reqIdx < NodeRequirements[nodeIdx].length; reqIdx++) {
+                    let reqNodeIdx = NodeRequirements[nodeIdx][reqIdx];
+                    // If our requirement is met
+                    if (Toggles[reqNodeIdx] != 0) {
+                        let color = ColorLineAvailable;
+                        // Check if our current node is already selected
+                        if (Toggles[nodeIdx] != 0) {
+                            color = ColorLineActive;
+                        }
+                        // Draw the line
+                        DrawNodeLine(NodeCenters[nodeIdx][0], NodeCenters[nodeIdx][1], NodeCenters[reqNodeIdx][0], NodeCenters[reqNodeIdx][1], color);
                     }
-                });
-            });
+                }
+            }
+
             // Print Circles
-            Toggles.forEach((toggle, nodeIdx) => {
+            // Green Circles for selected nodes, Light Yellow for "available" nodes
+            for (let nodeIdx = 0; nodeIdx < Toggles.length; nodeIdx++) {
                 // If node is set, and it's not the final reward Node
-                if (toggle != 0 && nodeIdx < Toggles.length - 1) {
+                if (Toggles[nodeIdx] != 0 && nodeIdx < Toggles.length - 1) {
                     context.beginPath();
-                    context.arc(NodeCenters[nodeIdx][0], NodeCenters[nodeIdx][1], 23, 0, 2 * Math.PI)
-                    context.lineWidth = 4;
+                    context.arc(NodeCenters[nodeIdx][0], NodeCenters[nodeIdx][1], NodeRadius, 0, 2 * Math.PI)
+                    context.lineWidth = 6;
                     context.strokeStyle = ColorLineActive;
                     if (isPotion(nodeIdx)) {
                         context.strokeStyle = ColorPotion;
                     }
                     context.stroke();
                 }
-            });
+                else {
+                    // Check if this node is 'available'
+                    for (let reqIdx = 0; reqIdx < NodeRequirements[nodeIdx].length; reqIdx++) {
+                        let reqNodeIdx = NodeRequirements[nodeIdx][reqIdx];
+                        // If our requirement is met
+                        if (Toggles[reqNodeIdx] != 0) {
+                            // Draw the circle
+                            context.beginPath();
+                            context.arc(NodeCenters[nodeIdx][0], NodeCenters[nodeIdx][1], NodeRadius, 0, 2 * Math.PI)
+                            context.lineWidth = 6;
+                            context.strokeStyle = "rgba(255, 224, 102, 0.8)"; // Yellow-ish color
+                            context.stroke();
+
+                            // If we're not a potion, shade in the Rune circle
+                            if (!isPotion(nodeIdx)) {
+                                context.fillStyle = "rgba(255, 224, 102, 0.3)"; // Yellow-ish color
+                                context.fill();
+                            }
+                        }
+                    }
+                }
+            }
+
             // Print Descriptions
             if (ShowDescriptions) {
                 NodeDescriptions.forEach((desc, idx) => {
                     PrintDescription(idx);
                 });
             }
+
             // Print Labels/Numbers
             if (ShowLabels) {
                 Toggles.forEach((val, index) => {
