@@ -43,49 +43,17 @@
     <title>S28 Altar Planner - Diablo 3 - by Caleko</title>
 
     <!-- " https://bnetcmsus-a.akamaihd.net/cms/page_media/RUQJUGNI5EWW1674699910911.jpg" -->
-    <img id="myImg" src="images/altar_base5.jpg" usemap="#image-map" draggable="false">
+    <img id="myImg" src="images/altar_base5.jpg" usemap="#image-map" draggable="false" onload="RenderPlanner()">
     <canvas id="myCanvas" width="1920" height="1080">Javascript is Required :(</canvas>
 
-    <!-- Image Map for clickable Image regions to call ToggleNode -->
-    <map name="image-map">
-        <area onclick="ToggleNode(0)" coords="1043,335,34" shape="circle" title="Your Kill Streak timer duration and reward bonus are doubled.">
-        <area onclick="ToggleNode(1)" coords="926,451,34" shape="circle" title="Pools of Reflection last for the entire Season and are not removed by death.">
-        <area onclick="ToggleNode(2)" coords="1159,451,34" shape="circle" title="Items have no level requirement.">
-        <area onclick="ToggleNode(3)" coords="868,510,34" shape="circle" title="+200 Damage">
-        <area onclick="ToggleNode(4)" coords="984,510,34" shape="circle" title="+25% Missile Damage Reduction">
-        <area onclick="ToggleNode(5)" coords="1101,510,34" shape="circle" title="+25% Movement Speed (Uncapped)">
-        <area onclick="ToggleNode(6)" coords="1217,510,34" shape="circle" title="Increase damage against elites by 15%.">
-        <area onclick="ToggleNode(7)" coords="1044,568,34" shape="circle" title="Picking up Health Globes grants a shield for 5% of your maximum health for 7 seconds. Max stacks 5.">
-        <area onclick="ToggleNode(8)" coords="868,625,34" shape="circle" title="+25% Melee Damage Reduction.">
-        <area onclick="ToggleNode(9)" coords="1044,625,34" shape="circle" title="Increases your highest elemental skill damage bonus by 10%.">
-        <area onclick="ToggleNode(10)" coords="1217,625,34" shape="circle" title="Increase damage against elites by 20%.">
-        <area onclick="ToggleNode(11)" coords="810,684,34" shape="circle" title="+10% Damage">
-        <area onclick="ToggleNode(12)" coords="926,684,34" shape="circle" title="Double the amount of Death's Breaths that drop.">
-        <area onclick="ToggleNode(13)" coords="984,684,34" shape="circle" title="Critical hits grant resource: Mana: 15, Hatred: 5, Wrath: 5, Arcane Power: 3, Fury: 3, Spirit: 5, Essence: 5.">
-        <area onclick="ToggleNode(14)" coords="1100,684,34" shape="circle" title="Double the amount of Bounty Caches that drop from completing bounties.">
-        <area onclick="ToggleNode(15)" coords="1159,684,34" shape="circle" title="Progress orbs from Nephalem and Greater Rifts are picked up automatically.">
-        <area onclick="ToggleNode(16)" coords="1275,684,34" shape="circle" title="Reduces the damage taken from elites by 25%.">
-        <area onclick="ToggleNode(17)" coords="868,743,34" shape="circle" title="+15% Damage">
-        <area onclick="ToggleNode(18)" coords="1044,743,34" shape="circle" title="Gain immunity to crowd-controlling effects.">
-        <area onclick="ToggleNode(19)" coords="1217,743,34" shape="circle" title="Gain passability.">
-        <area onclick="ToggleNode(20)" coords="810,800,34" shape="circle" title="Pets pick up Death's Breath.">
-        <area onclick="ToggleNode(21)" coords="926,800,34" shape="circle" title="Elite packs drop one additional progress orb.">
-        <area onclick="ToggleNode(22)" coords="984,800,34" shape="circle" title="Increase damage done to Bosses by 25%.">
-        <area onclick="ToggleNode(23)" coords="1100,800,34" shape="circle" title="Pets pick up and salvage common, magic, and rare items.">
-        <area onclick="ToggleNode(24)" coords="1159,800,34" shape="circle" title="Increase your chance to Dodge by 15%.">
-        <area onclick="ToggleNode(25)" coords="1275,800,34" shape="circle" title="Double the chance to find a legendary item purchased from Kadala.">
-        <area onclick="ToggleNode(26)" coords="868,860,34" shape="circle"
-            title="When you drink your health potion, you manifest one of three runic circles on the ground that grant increased damage, increased cooldown reduction, or increased resource cost reduction.">
-        <area onclick="ToggleNode(27)" coords="1044,860,34" shape="circle" title="When you drink your health potion, all enemies within 25 yards deal 25% less damage.">
-        <area onclick="ToggleNode(28)" coords="1222,860,34" shape="circle" title="When you drink your health potion, gain a random shrine or pylon effect.">
 
-        <area onclick="ToggleLabels()" coords="634,536,781,581" shape="rect" title="Toggle Labels">
-        <area onclick="ToggleDescriptions()" coords="634,588,781,631" shape="rect" title="Toggle Descriptions">
-        <area onclick="SaveState()" coords="1105,133,1250,175" shape="rect" title="Save">
-        <area coords="865,1042,1041,1070" href="https://discord.gg/rdiablo" target="_blank" shape="rect" title="Join the /r/Diablo Discord!">
-
+    <!-- Image Map for clickable Image regions -->
+    <map id="image-map" name="image-map">
+        <area shape="rect" coords="634,536,781,581" onclick="ToggleLabels()" title="Toggle Labels">
+        <area shape="rect" coords="634,588,781,631" onclick="ToggleDescriptions()" title="Toggle Descriptions">
+        <area shape="rect" coords="1105,133,1250,175" onclick="SaveState()" title="Save">
+        <area shape="rect" coords="865,1042,1041,1070" href="https://discord.gg/rdiablo" target="_blank" title="Join the /r/Diablo Discord!">
     </map>
-
 
     <script type="application/javascript">
         let ShowDescriptions = true;
@@ -94,6 +62,7 @@
         function ToggleLabels() { ShowLabels = !ShowLabels; RenderPlanner(); }
 
         const Toggles = Array(30).fill(0);
+        // Parent Nodes that allow us to activate each child
         const NodeRequirements = [
             /*A   0 */[],
             /*B   1 */[0],
@@ -127,6 +96,7 @@
             /*AD  29*/[],
         ];
 
+        // (X,Y) coords of each Node's center
         const NodeCenters = [
              /*A   0 */[1043, 335],
              /*B   1 */[926, 451],
@@ -194,6 +164,41 @@
              /*AD  29*/["Double Primals  &  Wings of Terror", +48],
         ];
 
+        // Mouseover Tooltips for each Node
+        const NodeTitles = [
+             /*A   0 */"Your Kill Streak timer duration and reward bonus are doubled.",
+             /*B   1 */"Pools of Reflection last for the entire Season and are not removed by death.",
+             /*C   2 */"Items have no level requirement.",
+             /*D   3 */"+200 Damage",
+             /*E   4 */"+25% Missile Damage Reduction",
+             /*F   5 */"+25% Movement Speed (Uncapped)",
+             /*G   6 */"Increase damage against elites by 15%.",
+             /*H   7 */"Picking up Health Globes grants a shield for 5% of your maximum health for 7 seconds. Max stacks 5.",
+             /*I   8 */"+25% Melee Damage Reduction.",
+             /*J   9 */"Increases your highest elemental skill damage bonus by 10%.",
+             /*K  10 */"Increase damage against elites by 20%.",
+             /*L  11 */"+10% Damage",
+             /*M  12 */"Double the amount of Death's Breaths that drop.",
+             /*N  13 */"Critical hits grant resource: Mana: 15, Hatred: 5, Wrath: 5, Arcane Power: 3, Fury: 3, Spirit: 5, Essence: 5.",
+             /*O  14 */"Double the amount of Bounty Caches that drop from completing bounties.",
+             /*P  15 */"Progress orbs from Nephalem and Greater Rifts are picked up automatically.",
+             /*Q  16 */"Reduces the damage taken from elites by 25%.",
+             /*R  17 */"+15% Damage",
+             /*S  18 */"Gain immunity to crowd-controlling effects.",
+             /*T  19 */"Gain passability.",
+             /*U  20 */"Pets pick up Death's Breath.",
+             /*V  21 */"Elite packs drop one additional progress orb.",
+             /*W  22 */"Increase damage done to Bosses by 25%.",
+             /*X  23 */"Pets pick up and salvage common, magic, and rare items.",
+             /*Y  24 */"Increase your chance to Dodge by 15%.",
+             /*Z  25 */"Double the chance to find a legendary item purchased from Kadala.",
+             /*AA  26*/"When you drink your health potion, you manifest one of three runic circles on the ground that grant increased damage, increased cooldown reduction, or increased resource cost reduction.",
+             /*AB  27*/"When you drink your health potion, all enemies within 25 yards deal 25% less damage.",
+             /*AC  28*/"When you drink your health potion, gain a random shrine or pylon effect.",
+             /*AD  29*/"",
+        ];
+
+        // Each Node's "official" Node Location Label
         const NodeLabels = [
              /*A   0 */"A",
              /*B   1 */"B",
@@ -226,6 +231,7 @@
              /*AC  28*/"AC",
              /*AD  29*/"AD",
         ];
+        // Progressive offering costs for primary nodes
         const Offerings = [
              /*A   0 */["10 Reusable Parts"],
              /*B   1 */["1 Flawless Diamond (or greater)", "15 Arcane Dust", "20 Reusable Parts"],
@@ -308,8 +314,6 @@
              /*AD  29*/[],
         ];
 
-
-
         // State parameter (URL Search Field, ie:  "index.html?s=STATE")
         const SearchParamState = 's';
 
@@ -333,6 +337,22 @@
         let CurPotion = 0;
         let canvas = document.getElementById('myCanvas');
         let context = canvas.getContext('2d');
+
+        function AddNodesToMap() {
+            let imgMap = document.getElementById("image-map");
+            if (imgMap) {
+                // For all but the last Node unlock
+                for (let i = 0; i < NodeCenters.length - 1; i++) {
+                    let myArea = document.createElement("area");
+                    myArea.shape = "circle";
+                    myArea.title = NodeTitles[i];
+                    myArea.onclick = function () { ToggleNode(i); };
+                    myArea.coords = NodeCenters[i][0] + "," + NodeCenters[i][1] + ",34";
+                    imgMap.appendChild(myArea);
+                }
+                // document.getElementById("myImg").setAttribute("usemap", "#image-map");
+            }
+        }
 
         function StateSave() {
             var nodeStr = "";
@@ -772,6 +792,7 @@
 
 
         ParseState();
+        AddNodesToMap();
         RenderPlanner();
         imageMapResize();
     </script>
