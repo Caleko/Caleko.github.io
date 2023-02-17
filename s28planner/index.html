@@ -53,6 +53,7 @@
         <area shape="rect" coords="634,588,781,631" onclick="ToggleDescriptions()" title="Toggle Descriptions">
         <area shape="rect" coords="1105,133,1250,175" onclick="StateExport()" title="Save">
         <area shape="rect" coords="668,133,814,175" onclick="ClearState()" title="Reset">
+        <area shape="rect" coords="0,0,1920,100" href="https://us.diablo3.blizzard.com/en-us/blog/23897180/" target="_blank" title="S28 Final Patch Notes">
         <area shape="rect" coords="865,1042,1041,1070" href="https://discord.gg/rdiablo" target="_blank" title="Join the /r/Diablo Discord!">
     </map>
 
@@ -138,13 +139,13 @@
              /*I   8 */["-25% Melee Dmg", -14],
              /*J   9 */["+10% Ele Dmg", -14],
              /*K  10 */["+20% Elite Dmg", -14],
-             /*L  11 */["+10% Dmg", -14],
+             /*L  11 */["+20% Dmg", -14],
              /*M  12 */["DBs x2", -14],
              /*N  13 */["Resource on Crit", +25],
              /*O  14 */["Bounties x2", +25],
              /*P  15 */["Auto Orbs", -14],
              /*Q  16 */["-25% Elite Dmg", -14],
-             /*R  17 */["+15% Dmg", -14],
+             /*R  17 */["+30% Dmg", -14],
              /*S  18 */["CC Immunity", -14],
              /*T  19 */["Passability", -14],
              /*U  20 */["Auto-DBs", -14],
@@ -155,7 +156,7 @@
              /*Z  25 */["Kadala Leggies x2", -14],
              /*AA  26*/["Triune Circles", -14],
              /*AB  27*/["-25% Dmg within 25yds", +25],
-             /*AC  28*/["Random Shrine/Pylon Power", -14],
+             /*AC  28*/["Shrine / 16s Power Pylon", -14],
              /*AD  29*/["Double Primals  &  Wings of Terror", +48],
         ];
 
@@ -172,13 +173,13 @@
              /*I   8 */"+25% Melee Damage Reduction.",
              /*J   9 */"Increases your highest elemental skill damage bonus by 10%.",
              /*K  10 */"Increase damage against elites by 20%.",
-             /*L  11 */"+10% Damage",
+             /*L  11 */"+20% Damage",
              /*M  12 */"Double the amount of Death's Breaths that drop.",
              /*N  13 */"Critical hits grant resource: Mana: 15, Hatred: 5, Wrath: 5, Arcane Power: 3, Fury: 3, Spirit: 5, Essence: 5.",
              /*O  14 */"Double the amount of Bounty Caches that drop from completing bounties.",
-             /*P  15 */"Progress orbs from Nephalem and Greater Rifts are picked up automatically.",
+             /*P  15 */"Progress orbs from Nephalem and Greater Rifts are automatically picked up within 60 yards.",
              /*Q  16 */"Reduces the damage taken from elites by 25%.",
-             /*R  17 */"+15% Damage",
+             /*R  17 */"+30% Damage",
              /*S  18 */"Gain immunity to crowd-controlling effects.",
              /*T  19 */"Gain passability.",
              /*U  20 */"Pets pick up Death's Breath.",
@@ -189,7 +190,7 @@
              /*Z  25 */"Double the chance to find a legendary item purchased from Kadala.",
              /*AA  26*/"When you drink your health potion, you manifest one of three runic circles on the ground that grant increased damage, increased cooldown reduction, or increased resource cost reduction.",
              /*AB  27*/"When you drink your health potion, all enemies within 25 yards deal 25% less damage.",
-             /*AC  28*/"When you drink your health potion, gain a random shrine or pylon effect.",
+             /*AC  28*/"When you drink your health potion, gain a random shrine or the Dimensional Power pylon effect.",
              /*AD  29*/"When a primal item drops, a second random primal item drops as well.",
         ];
 
@@ -246,7 +247,7 @@
              /*P  15 */["250 Forgotten Souls"],
              /*Q  16 */["1400 Blood Shards"],
              /*R  17 */["Ancient Hellfire Amulet"],
-             /*S  18 */["Never Ending Questions"],
+             /*S  18 */["4 Tome of Set Dungeon Pages", "         (For your class)"],
              /*T  19 */["Ancient Puzzle Ring", "50 Khanduran Runes", "50 Caldeum Nightshade", "50 Arreat War Tapestry", "50 Corrupted Angel Flesh", "50 Westmarch Holy Water"],
              /*U  20 */["500 Death's Breaths", "300 Forgotten Souls"],
              /*V  21 */["1500 Blood Shards"],
@@ -262,6 +263,7 @@
         const SpecialOffers = [
             [4, "20 Forgotten Souls, 10 Each Bounty Mat"],
             [10, "1 Flawless Royal Emerald, 30 Each Bounty Mat"],
+            [18, "4 Tome of Set Dungeon Pages for your class"],
             [19, "Ancient Puzzle Ring, 50 Each Bounty Mat"]
         ];
 
@@ -358,7 +360,7 @@
 
         // We will toggle temporary using V1 saves, so we can swap
         //  when Live notes go out
-        let useV1Saves = true;
+        let useV1Saves = false;
         let VersionNumber = 0x81
         function StateSave() {
             var nodeStr = "";
@@ -703,17 +705,18 @@
 
         function RenderPlanner() {
             context.clearRect(0, 0, canvas.width, canvas.height);
-            if (useV1Saves) {
-                context.font = "bold 32px Arial";
-                context.textAlign = "center";
-                context.strokeStyle = 'black';
-                context.lineWidth = 6;
-                context.fillStyle = 'yellow';
-                txt = "PTR Build. Final Notes Soon™";
-                context.miterLimit = 1;
-                context.strokeText(txt, 960, 50);
-                context.fillText(txt, 960, 50);
-            }
+
+            // Build Header
+            context.font = "bold 32px Arial";
+            context.textAlign = "center";
+            context.strokeStyle = 'black';
+            context.lineWidth = 6;
+            context.fillStyle = ColorTableActive2;
+            txt = "Final Build. Patch Notes HERE";
+            context.miterLimit = 1;
+            context.strokeText(txt, 960, 50);
+            context.fillText(txt, 960, 50);
+
 
             // Display the words for Labels and Description boxes
             context.font = "bold 14px Arial";
