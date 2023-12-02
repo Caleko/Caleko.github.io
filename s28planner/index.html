@@ -53,7 +53,7 @@
         <area shape="rect" coords="634,588,781,631" onclick="ToggleDescriptions()" title="Toggle Descriptions">
         <area shape="rect" coords="1105,133,1250,175" onclick="StateExport()" title="Save">
         <area shape="rect" coords="668,133,814,175" onclick="ClearState()" title="Reset">
-        <area shape="rect" coords="0,0,1920,100" href="https://us.diablo3.blizzard.com/en-us/blog/23897180/" target="_blank" title="S28 Final Patch Notes">
+        <area shape="rect" coords="0,0,1920,100" href="../d3/altar.html" target="_self" title="Link to current Permanent Altar (Season 30+)">
         <area shape="rect" coords="865,1042,1041,1070" href="https://discord.gg/rdiablo" target="_blank" title="Join the /r/Diablo Discord!">
     </map>
 
@@ -712,10 +712,20 @@
             context.strokeStyle = 'black';
             context.lineWidth = 6;
             context.fillStyle = ColorTableActive2;
-            txt = "Final Build. Patch Notes HERE";
+            txt = "Click HERE for S30+ Permanent Altar";
             context.miterLimit = 1;
             context.strokeText(txt, 960, 50);
             context.fillText(txt, 960, 50);
+            
+            context.font = "bold 36px Arial";
+            context.textAlign = "left";
+            context.strokeStyle = 'black';
+            context.lineWidth = 6;
+            context.fillStyle = 'Red';//ColorTableActive2;
+            txt = "WARNING: This planner is for S28!";
+            context.miterLimit = 1;
+            context.strokeText(txt, 20, 50);
+            context.fillText(txt, 20, 50);
 
 
             // Display the words for Labels and Description boxes
