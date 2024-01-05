@@ -340,6 +340,21 @@
         let ShowLabels = false;
         function ToggleLabels() { ShowLabels = !ShowLabels; RenderPlanner(); }
 
+        // Format last Update time/date
+        const utcTimestamp = 1704485426000; // UTC timestamp (in milliseconds)
+        // Create a Date object from the UTC timestamp
+        const date = new Date(utcTimestamp);
+        // Format the date according to the user's locale using Intl.DateTimeFormat
+        const FormattedDate = new Intl.DateTimeFormat(navigator.language, {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            // hour: 'numeric',
+            // minute: '2-digit',
+            // second: '2-digit',
+            // timeZone: 'UTC' // Indicate that the timestamp is in UTC
+        }).format(date);
+
         function AddNodesToMap() {
             let imgMap = document.getElementById("image-map");
             if (imgMap) {
@@ -712,7 +727,7 @@
             context.strokeStyle = 'black';
             context.lineWidth = 4;
             context.fillStyle = ColorTableActive2;
-            txt = "Last Updated:  S30 PTR Patch 2.7.7";
+            txt = "Patch 2.7.7  (Updated "+FormattedDate+")";
             context.miterLimit = 1;
             context.strokeText(txt, 960, 50);
             context.fillText(txt, 960, 50);
