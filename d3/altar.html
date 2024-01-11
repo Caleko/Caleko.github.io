@@ -175,7 +175,7 @@
              /*K  10 */"Increase damage against elites by 5%.",
              /*L  11 */"+5% Damage",
              /*M  12 */"Double the amount of Death's Breaths that drop.",
-             /*N  13 */"Critical hits grant resource: Mana: 15, Hatred: 5, Wrath: 5, Arcane Power: 3, Fury: 3, Spirit: 5, Essence: 5.",
+             /*N  13 */"Critical hits grant resource:\n - Mana: 15\n - Hatred: 5\n - Wrath: 5\n - Arcane Power: 3\n - Fury: 3\n - Spirit: 5\n - Essence: 5",
              /*O  14 */"Double the amount of Bounty Caches that drop from completing bounties.",
              /*P  15 */"Progress orbs from Nephalem and Greater Rifts are automatically picked up within 60 yards.",
              /*Q  16 */"Reduces the damage taken from elites by 5%.",
@@ -190,7 +190,7 @@
              /*Z  25 */"Double the chance to find a legendary item purchased from Kadala.",
              /*AA  26*/"When you drink your health potion, you manifest one of three runic circles on the ground that grant increased damage, increased cooldown reduction, or increased resource cost reduction.",
              /*AB  27*/"When you drink your health potion, all enemies within 25 yards deal 25% less damage.",
-             /*AC  28*/"When you drink your health potion, gain a random shrine effect.",
+             /*AC  28*/"When you drink your health potion, gain a random shrine effect.\n - Excludes Empowered (Resource Rate / Cool Down Reduction)",
              /*AD  29*/"When a primal item drops, a second random primal item drops as well.",
         ];
 
@@ -341,7 +341,7 @@
         function ToggleLabels() { ShowLabels = !ShowLabels; RenderPlanner(); }
 
         // Format last Update time/date
-        const utcTimestamp = 1704485426000; // UTC timestamp (in milliseconds)
+        const utcTimestamp = 1704996202000; // UTC timestamp (in milliseconds)
         // Create a Date object from the UTC timestamp
         const date = new Date(utcTimestamp);
         // Format the date according to the user's locale using Intl.DateTimeFormat
